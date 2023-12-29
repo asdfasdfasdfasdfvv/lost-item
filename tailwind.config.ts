@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss'
+import type {Config} from 'tailwindcss'
 
 const config: Config = {
   content: [
@@ -8,6 +8,28 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px',
+        '2xl': '1536px',
+      },
+      borderRadius: {
+        'lg-plus': '1.25rem',
+      },
+      spacing: {
+        box: '1.18rem',
+        item: '0.56rem',
+      },
+      colors: {
+        bgGray: '#F8F8F8',
+        title: '#260101',
+        subtitle: '#999999',
+      },
+      boxShadow: {
+        box: '0px 4px 10px 0px rgba(0, 0, 0, 0.05)',
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
