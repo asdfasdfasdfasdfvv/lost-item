@@ -1,4 +1,5 @@
 import DynamicIcon from 'components/common/DynamicIcon'
+import COLORS from 'constants/colors'
 
 interface LostItemProps {
   title: string
@@ -27,7 +28,7 @@ export default function LostItem({
           <DynamicIcon
             size={0.8}
             iconName={'FaRegCalendarAlt'}
-            color="#f2f2f2"
+            color={COLORS.gray}
             luminance={40}
           />
           <span className="ml-4pxr line-clamp-1">{lostDate}</span>
@@ -36,7 +37,7 @@ export default function LostItem({
           <DynamicIcon
             size={0.8}
             iconName={'FaMapMarker'}
-            color="#f2f2f2"
+            color={COLORS.gray}
             luminance={40}
           />
           <span className="ml-4pxr line-clamp-4">{lostPlace}</span>

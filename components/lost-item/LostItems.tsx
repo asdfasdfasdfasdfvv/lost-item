@@ -1,12 +1,18 @@
 'use client'
 import { useQuery } from '@tanstack/react-query'
-import { Suspense, useState } from 'react'
+import useInfiniteScroll from 'hooks/useInfiniteScroll'
+import { Suspense, useRef, useState } from 'react'
 
 import LostItem from './LostItem'
 
 const pageSize = 10
 export default function LostItems() {
-  const [page] = useState(0)
+  const loader = useRef<HTMLDivElement | null>(null)
+  const [page, setPage] = useState(0)
+  const fetchMoreItems = () => {
+    setPage((prev) => prev + 1)
+  }
+
   const { isLoading, data } = useQuery<any>({
     queryKey: ['lostItemList'],
     queryFn: async () => {
@@ -16,29 +22,32 @@ export default function LostItems() {
     },
   })
 
-  if (!data || data.length < 1) {
+  const isIntersecting = useInfiniteScroll({
+    target: loader,
+    callback: fetchMoreItems,
+  })
+
+  const currentPageData = data?.slice(0, (page + 1) * pageSize)
+
+  if (!data || currentPageData.length < 1) {
     return <div>No Result</div>
   }
-  const currentPageData = data?.slice(page * pageSize, (page + 1) * pageSize)
 
   return (
     <ul className="w-full max-w-80">
       <Suspense fallback={isLoading}>
-        {currentPageData?.length < 1 ? (
-          <div>No Result</div>
-        ) : (
-          currentPageData?.map(
-            ({ id, lostDate, lostPlace, name, subject }: any, _: number) => (
-              <LostItem
-                key={id}
-                lostDate={lostDate}
-                lostPlace={lostPlace}
-                title={name}
-                subject={subject}
-              />
-            ),
-          )
+        {currentPageData.map(
+          ({ id, lostDate, lostPlace, name, subject }: any, _: number) => (
+            <LostItem
+              key={id}
+              lostDate={lostDate}
+              lostPlace={lostPlace}
+              title={name}
+              subject={subject}
+            />
+          ),
         )}
+        <div ref={loader}>{isIntersecting && <p>Loading more items...</p>}</div>
       </Suspense>
     </ul>
   )
