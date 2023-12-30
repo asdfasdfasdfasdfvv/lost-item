@@ -1,5 +1,9 @@
-import type {Config} from 'tailwindcss'
+import type { Config } from 'tailwindcss'
 
+const pxToRem = (px: number, base = 16) => `${px / base}rem`
+const range = (start: number, end: number) => {
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i)
+}
 const config: Config = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -21,6 +25,10 @@ const config: Config = {
       spacing: {
         box: '1.18rem',
         item: '0.56rem',
+        ...range(0, 500).reduce((acc: { [key: string]: string }, px) => {
+          acc[`${px}pxr`] = pxToRem(px)
+          return acc
+        }, {}),
       },
       colors: {
         bgGray: '#F8F8F8',
