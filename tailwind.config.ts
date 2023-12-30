@@ -1,9 +1,12 @@
+/* eslint-disable import/no-extraneous-dependencies */
+
 import type { Config } from 'tailwindcss'
 
 const pxToRem = (px: number, base = 16) => `${px / base}rem`
 const range = (start: number, end: number) => {
   return Array.from({ length: end - start + 1 }, (_, i) => start + i)
 }
+
 const config: Config = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -34,6 +37,8 @@ const config: Config = {
         bgGray: '#F8F8F8',
         title: '#260101',
         subtitle: '#999999',
+        primary: '#383838',
+        icon: '#f2f2f2',
       },
       boxShadow: {
         box: '0px 4px 10px 0px rgba(0, 0, 0, 0.05)',
