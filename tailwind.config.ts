@@ -51,6 +51,18 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }: any) {
+      const newUtilities = {
+        '.flex-center': {
+          display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center',
+        },
+      }
+
+      addUtilities(newUtilities)
+    },
+  ],
 }
 export default config
