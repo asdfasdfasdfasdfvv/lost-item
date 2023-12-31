@@ -3,7 +3,9 @@ import React from 'react'
 import * as AiIcons from 'react-icons/ai'
 import * as FaIcons from 'react-icons/fa'
 import * as Hi12Icons from 'react-icons/hi2'
+import type { IconStyle } from 'types/style/common'
 import { darkenColor } from 'utils/darkenColor'
+import tw from 'utils/twMergeObjects'
 
 export type IconKeys =
   | keyof typeof FaIcons
@@ -15,6 +17,7 @@ interface DynamicIconProps {
   color?: string
   luminance?: number
   size?: number
+  style?: IconStyle
 }
 
 const iconLibraries = {
@@ -28,6 +31,7 @@ const DynamicIcon: FC<DynamicIconProps> = ({
   color = '#80FFD1',
   luminance = 0,
   size = 24,
+  style,
 }) => {
   let IconComponent: React.ComponentType<SVGProps<SVGSVGElement>> | null = null
 
@@ -41,10 +45,13 @@ const DynamicIcon: FC<DynamicIconProps> = ({
   }
 
   const iconColor = darkenColor(color, luminance)
-  const iconWrapStyle = { width: `${size}rem`, height: `${size}rem` }
+  const iconSizeStyle = { width: `${size}rem`, height: `${size}rem` }
+  const iconWrapperStyle = { icon: 'box-border shrink-0' }
+
+  const st = tw<IconStyle>(iconWrapperStyle, style)
   if (IconComponent) {
     return (
-      <div style={iconWrapStyle} className="box-border shrink-0">
+      <div style={iconSizeStyle} className={st.icon}>
         <IconComponent
           className={`h-full w-full`}
           style={{ color: iconColor }}
