@@ -2,7 +2,7 @@ import { twMerge } from 'tailwind-merge'
 
 const tw = <T extends Record<string, string>>(
   originStyle: T,
-  customStyle?: T
+  customStyle?: T,
 ): T => {
   if (!customStyle || typeof customStyle === 'string') {
     return originStyle as unknown as T
