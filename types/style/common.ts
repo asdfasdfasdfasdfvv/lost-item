@@ -4,3 +4,11 @@ export type InputStyle = {
   label?: string
   invalidMessage?: string
 }
+export type ButtonStyle = {
+  button?: string
+  icon?: string
+  imageIcon?: string
+  title?: string
+}
+
+export type IconStyle = Pick<ButtonStyle, 'icon'>
