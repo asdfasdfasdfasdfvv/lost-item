@@ -30,5 +30,6 @@
   "prettier.ignorePath": ".gitignore",
   "[typescriptreact]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
-  }
+  },
+  "cSpell.words": ["nextjs"]
 }

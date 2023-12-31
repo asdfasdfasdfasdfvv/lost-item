@@ -82,7 +82,9 @@ const Input = ({
         </div>
       )}
 
-      <span className={st.invalidMessage}>{invalidMessage}</span>
+      {invalidMessage && (
+        <span className={st.invalidMessage}>{invalidMessage}</span>
+      )}
     </div>
   )
 }

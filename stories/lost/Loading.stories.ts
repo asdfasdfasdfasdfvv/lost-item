@@ -1,5 +1,6 @@
+import type { Meta, StoryObj } from '@storybook/react'
+
 import Loading from '@/app/Loading'
-import type {Meta, StoryObj} from '@storybook/react'
 
 const meta = {
   title: 'Common/Loading Skeleton',

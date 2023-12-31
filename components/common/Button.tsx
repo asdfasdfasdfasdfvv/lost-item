@@ -7,7 +7,12 @@ import DynamicIcon from './DynamicIcon'
 
 type ButtonProps = {
   title?: string
-  icon?: { iconName: IconKeys; size: number; color: string; luminance?: number }
+  icon?: {
+    iconName: IconKeys
+    size: number
+    color?: string
+    luminance?: number
+  }
   imageIcon?: string
   handler?: (value?: any) => void
   style?: ButtonStyle
