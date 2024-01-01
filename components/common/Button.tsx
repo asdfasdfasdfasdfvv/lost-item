@@ -5,14 +5,15 @@ import tw from 'utils/twMergeObjects'
 import type { IconKeys } from './DynamicIcon'
 import DynamicIcon from './DynamicIcon'
 
+export type IconType = {
+  iconName: IconKeys
+  size: number
+  color?: string
+  luminance?: number
+}
 type ButtonProps = {
   title?: string
-  icon?: {
-    iconName: IconKeys
-    size: number
-    color?: string
-    luminance?: number
-  }
+  icon?: IconType
   imageIcon?: string
   handler?: (value?: any) => void
   style?: ButtonStyle

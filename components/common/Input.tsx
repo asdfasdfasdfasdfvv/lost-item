@@ -4,7 +4,7 @@ import type { InputStyle } from 'types/style/common'
 import tw from 'utils/twMergeObjects'
 
 interface InputProps {
-  value?: string
+  value?: string | number
   style?: InputStyle
   name: string
   disabled?: boolean
