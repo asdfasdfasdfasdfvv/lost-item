@@ -56,6 +56,7 @@
 import type { FormEvent, MutableRefObject } from 'react'
 import { createRef, useRef, useState } from 'react'
 import type {
+  FormFieldRender,
   FormFields,
   FormKeys,
   FormRefs,
@@ -77,20 +78,28 @@ type UseInputSchemaReturn<T extends keyof FormKeys> = {
     ) => Promise<void>,
   ) => (event: FormEvent<HTMLFormElement>) => Promise<void>
 
-  getFormFields: () => FormFields<T>
+  getFormFields: () => {
+    renderFields: FormFieldRender<T>
+    formFields: FormFields<T>
+  }
 }
 
 const generateFormFields = <T extends keyof FormKeys>(
   formSchema: FormSchema<T>,
-): FormFields<T> => {
+  event: {
+    handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  },
+): { renderFields: FormFieldRender<T>; formFields: FormFields<T> } => {
   const formFields = {} as FormFields<T>
+  const renderFields = {} as FormFieldRender<T>
   const keys = Object.keys(formSchema) as T[]
 
   keys.forEach((key) => {
-    formFields[key] = { ...formSchema[key] }
+    formFields[key] = { ...formSchema[key], ...event }
+    renderFields[key] = formFields[key].component?.(formFields[key]) || null
   })
 
-  return formFields
+  return { renderFields, formFields }
 }
 const initializeFormRefs = <T extends keyof FormKeys>(
   formState: FormSchema<T>,
@@ -152,12 +161,13 @@ const useForm = <T extends keyof FormKeys>(
   const preprocessedFormState = generateInitFormState(initFormState, formRefs)
   const keys = Object.keys(preprocessedFormState) as T[]
   const initForm = keys.reduce<FormState<T>>((acc, input: T) => {
-    const { value, error } = formSchema[input]
+    const { value, validate } = formSchema[input]
+
     return {
       ...acc,
       [input]: {
         value,
-        error,
+        error: validate(value),
       },
     }
   }, {})
@@ -179,7 +189,11 @@ const useForm = <T extends keyof FormKeys>(
     isFormValid.current = checkFormValid(changedForm)
   }
   const getFormFields = () => {
-    return generateFormFields(preprocessedFormState)
+    const event = {
+      handleInputChange: handleOnChange,
+    }
+
+    return generateFormFields(preprocessedFormState, event)
   }
   const handleOnSubmit =
     (onSubmit: {

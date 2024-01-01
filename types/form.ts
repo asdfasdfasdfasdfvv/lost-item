@@ -29,9 +29,15 @@ export type FormFieldValue<T extends keyof FormKeys> = {
   label?: string
   key?: string
   validatePlaceholder?: string[]
-  validate: (value: string, formState?: FormState<T> | undefined) => FormError
+  validate: (
+    value: string | number,
+    formState?: FormState<T> | undefined,
+  ) => FormError
   onChange?: () => void
   component?: ({ ...args }) => JSX.Element
+}
+export type FormFieldRender<T extends keyof FormKeys> = {
+  [K in T]: JSX.Element | null
 }
 export type FormSchema<T extends keyof FormKeys> = {
   [K in T]: FormFieldValue<T>
