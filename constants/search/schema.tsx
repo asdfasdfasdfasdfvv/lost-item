@@ -16,18 +16,20 @@ export const SearchSchema: FormSchema<FormElements> = {
     label: '',
     placeholder: '검색어 입력',
     component: (args) => {
-      const { name, type, key, value, handleInputChange } = args
+      const { name, type, key, value, handleInputChange, ref, ...props } = args
       return (
         <Input
+          inputRef={ref}
           name={name}
           type={type}
           key={key}
           value={value}
           handleInputChange={handleInputChange}
+          {...props}
         />
       )
     },
-    validate: (value: string) => {
+    validate: (value) => {
       if (!value) {
         return '입력이 필요합니다.'
       }
@@ -43,22 +45,20 @@ export const SearchSchema: FormSchema<FormElements> = {
     label: '',
     placeholder: '분실 장소',
     component: (args) => {
-      const { name, type, key, value, handleInputChange } = args
+      const { name, type, key, value, handleInputChange, ref, ...props } = args
       return (
         <Input
+          inputRef={ref}
           name={name}
           type={type}
           key={key}
           value={value}
           handleInputChange={handleInputChange}
-          {...args}
+          {...props}
         />
       )
     },
-    validate: (value: string) => {
-      if (!value) {
-        return '입력이 필요합니다.'
-      }
+    validate: () => {
       return null
     },
   },
@@ -70,22 +70,20 @@ export const SearchSchema: FormSchema<FormElements> = {
     name: 'startDate',
     label: '',
     component: (args) => {
-      const { name, type, key, value, handleInputChange } = args
+      const { name, type, key, value, handleInputChange, ref, ...props } = args
       return (
         <Input
+          inputRef={ref}
           name={name}
           type={type}
           key={key}
           value={value}
           handleInputChange={handleInputChange}
-          {...args}
+          {...props}
         />
       )
     },
-    validate: (value: string) => {
-      if (!value) {
-        return '입력이 필요합니다.'
-      }
+    validate: () => {
       return null
     },
   },
@@ -97,22 +95,20 @@ export const SearchSchema: FormSchema<FormElements> = {
     name: 'endDate',
     label: '',
     component: (args) => {
-      const { name, type, key, value, handleInputChange } = args
+      const { name, type, key, value, handleInputChange, ref, ...props } = args
       return (
         <Input
+          inputRef={ref}
           name={name}
           type={type}
           key={key}
           value={value}
           handleInputChange={handleInputChange}
-          {...args}
+          {...props}
         />
       )
     },
-    validate: (value: string) => {
-      if (!value) {
-        return '입력이 필요합니다.'
-      }
+    validate: () => {
       return null
     },
   },

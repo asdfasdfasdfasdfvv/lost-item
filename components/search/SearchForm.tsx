@@ -1,23 +1,40 @@
+'use client'
 import Button from 'components/common/Button'
+import type { FormElements } from 'constants/search/schema'
 import { SearchSchema } from 'constants/search/schema'
 import { useForm } from 'hooks/useForm'
+import type { FormEvent } from 'react'
 import { SearchFormStyle } from 'styles/lost/search'
+import type { SubmitFormData } from 'types/form'
 
 import SearchFormOptions from './SearchFormOptions'
 
 const { searchWrapper, inputWrapper, submitButton, searchOption } =
   SearchFormStyle
 
-export default function SearchInput() {
-  const { getFormFields, handleOnChange } = useForm(SearchSchema)
-  const { searchText } = getFormFields()
+export default function SearchForm() {
+  const { getFormFields, handleOnSubmit } = useForm(SearchSchema)
+  const {
+    renderFields: { searchText },
+  } = getFormFields()
 
+  const handleSearchSubmit = async (
+    e: FormEvent<HTMLFormElement>,
+    formData: SubmitFormData<FormElements>,
+  ) => {
+    e.preventDefault()
+    const { searchText } = formData
+    console.log(searchText)
+  }
   return (
     <div className={searchWrapper}>
-      <form className={inputWrapper}>
+      <form
+        className={inputWrapper}
+        onSubmit={handleOnSubmit(handleSearchSubmit)}
+      >
         <div className="flex-center">
-          {searchText.component?.({ ...searchText, handleOnChange })}
-          <Button icon={submitButton} />
+          {searchText}
+          <Button icon={submitButton} buttonType="submit" />
           <div className={searchOption.wrapper}>
             <Button
               title="검색조건"
@@ -27,10 +44,7 @@ export default function SearchInput() {
             />
           </div>
         </div>
-        <SearchFormOptions
-          handleOnChange={handleOnChange}
-          getFormFields={getFormFields}
-        />
+        <SearchFormOptions getFormFields={getFormFields} />
       </form>
     </div>
   )

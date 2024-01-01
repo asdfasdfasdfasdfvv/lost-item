@@ -15,14 +15,8 @@ export default meta
 // StoryFn을 사용하여 스토리를 정의합니다.
 export const Default: StoryFn<typeof SearchFormOptions> = (args) => {
   // 필요한 hooks를 여기에 추가합니다.
-  const { getFormFields, handleOnChange } = useForm(SearchSchema)
+  const { getFormFields } = useForm(SearchSchema)
 
   // SearchFormOptions 컴포넌트에 필요한 props와 함께 상태를 전달합니다.
-  return (
-    <SearchFormOptions
-      {...args}
-      getFormFields={getFormFields}
-      handleOnChange={handleOnChange}
-    />
-  )
+  return <SearchFormOptions {...args} getFormFields={getFormFields} />
 }
