@@ -4,6 +4,7 @@ import BaseLayout from 'components/layout/Layout'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import TanstackProvider from 'providers/TanstackProvider'
+import { RecoilRoot } from 'recoil'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,9 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <TanstackProvider>
-          <BaseLayout>{children}</BaseLayout>
-        </TanstackProvider>
+        <RecoilRoot>
+          <TanstackProvider>
+            <BaseLayout>{children}</BaseLayout>
+          </TanstackProvider>
+        </RecoilRoot>
       </body>
     </html>
   )
