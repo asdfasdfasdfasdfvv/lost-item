@@ -23,8 +23,8 @@ export default function SearchForm() {
     formData: SubmitFormData<FormElements>,
   ) => {
     e.preventDefault()
-    const { searchText } = formData
-    console.log(searchText)
+
+    console.log(formData)
   }
   return (
     <div className={searchWrapper}>
