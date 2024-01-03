@@ -8,6 +8,15 @@ const nextConfig = {
       },
     ];
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'www.lost112.go.kr',
+        pathname: '/lostnfs/images/uploadImg/**',
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;
