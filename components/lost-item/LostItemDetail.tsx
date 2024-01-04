@@ -16,7 +16,7 @@ const Detail: React.FC<DetailProps> = ({ label, value }) => (
   </dl>
 )
 
-interface LostItemDetails {
+export interface LostItemDetails {
   lostProductName: string
   articleId: string
   lostDate: string
@@ -35,7 +35,7 @@ interface LostItemDetails {
 }
 
 interface LostItemPageProps {
-  lostItemId: Pick<LostItemDetails, 'articleId'>
+  lostItemId: string
 }
 
 const LostItemDetail: React.FC<LostItemPageProps> = ({
