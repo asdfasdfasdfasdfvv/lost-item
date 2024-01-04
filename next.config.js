@@ -13,7 +13,7 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'www.lost112.go.kr',
-        pathname: '/lostnfs/images/uploadImg/**',
+        pathname: '/lostnfs/images/**',
       },
     ],
   },
