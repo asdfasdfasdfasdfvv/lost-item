@@ -6,15 +6,20 @@ interface LostItemProps {
   lostDate: string
   lostPlace: string
   subject: string
+  hanldeClickLostItem: (e: any) => void
 }
 export default function LostItem({
   title,
   lostDate,
   lostPlace,
   subject,
+  hanldeClickLostItem,
 }: LostItemProps) {
   return (
-    <li className="mb-box flex h-28 w-full max-w-80 shrink-0 rounded-lg-plus bg-white px-2 pt-3 shadow-box">
+    <li
+      onClick={hanldeClickLostItem}
+      className="mb-box flex h-28 w-full max-w-80 shrink-0 rounded-lg-plus bg-white px-2 pt-3 shadow-box"
+    >
       <div className="flex flex-[7] flex-col ">
         <span className="mb-item line-clamp-1 text-base text-title">
           {title}

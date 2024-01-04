@@ -26,7 +26,7 @@ const twButtonStyles = {
   button: '',
   icon: '',
   imageIcon: '',
-  title: '',
+  title: ''
 }
 
 const Button = ({
@@ -37,7 +37,7 @@ const Button = ({
   imageIcon,
   disabled = false,
   dataType = '',
-  buttonType = 'button',
+  buttonType = 'button'
 }: ButtonProps) => {
   const st = tw<ButtonStyle>(twButtonStyles, style)
   return (
@@ -46,8 +46,7 @@ const Button = ({
       disabled={disabled}
       className={st.button}
       onClick={handler && handler}
-      data-type={`${dataType}`}
-    >
+      data-type={`${dataType}`}>
       {icon && !imageIcon && (
         <DynamicIcon
           size={icon.size}

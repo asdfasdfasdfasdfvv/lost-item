@@ -29,7 +29,7 @@
   "eslint.format.enable": true,
   "prettier.ignorePath": ".gitignore",
   "[typescriptreact]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "cSpell.words": ["nextjs"]
 }
