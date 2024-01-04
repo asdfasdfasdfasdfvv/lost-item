@@ -15,7 +15,7 @@ const ImageIcon = (props: Props) => {
 
   const safeNumber = {
     w: matchesW && matchesW[1] ? parseInt(matchesW[1], 10) : 10,
-    h: matchesH && matchesH[1] ? parseInt(matchesH[1], 10) : 10,
+    h: matchesH && matchesH[1] ? parseInt(matchesH[1], 10) : 10
   }
 
   return (

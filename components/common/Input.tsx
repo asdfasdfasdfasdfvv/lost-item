@@ -23,7 +23,7 @@ const twInputStyles = {
   wrapper: 'w-full flex flex-col',
   input: 'text-gray-900',
   label: 'font-normal text-base text-white/[0.87] mb-8pxr',
-  invalidMessage: 'text-red-500 text-sm h-15pxr',
+  invalidMessage: 'text-red-500 text-sm h-15pxr'
 }
 
 const Input = ({
@@ -39,7 +39,7 @@ const Input = ({
   type = 'text',
   handleInputFocus,
   handleInputChange,
-  handleInputBlur,
+  handleInputBlur
 }: InputProps) => {
   const st = tw<InputStyle>(twInputStyles, style)
   const [isFocused, setIsFocused] = useState(false)

@@ -23,7 +23,7 @@ interface DynamicIconProps {
 const iconLibraries = {
   FaIcons,
   AiIcons,
-  Hi12Icons,
+  Hi12Icons
 }
 
 const DynamicIcon: FC<DynamicIconProps> = ({
@@ -31,7 +31,7 @@ const DynamicIcon: FC<DynamicIconProps> = ({
   color = '#80FFD1',
   luminance = 0,
   size = 24,
-  style,
+  style
 }) => {
   let IconComponent: React.ComponentType<SVGProps<SVGSVGElement>> | null = null
 

@@ -8,10 +8,10 @@ interface SearchFormOptionsProps {
   }
 }
 export default function SearchFormOptions({
-  getFormFields,
+  getFormFields
 }: SearchFormOptionsProps) {
   const {
-    renderFields: { endDate, startDate, lostLocation },
+    renderFields: { endDate, startDate, lostLocation }
   } = getFormFields()
   return (
     <div className="flex flex-col">

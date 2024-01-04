@@ -15,12 +15,12 @@ const { searchWrapper, inputWrapper, submitButton, searchOption } =
 export default function SearchForm() {
   const { getFormFields, handleOnSubmit } = useForm(SearchSchema)
   const {
-    renderFields: { searchText },
+    renderFields: { searchText }
   } = getFormFields()
 
   const handleSearchSubmit = async (
     e: FormEvent<HTMLFormElement>,
-    formData: SubmitFormData<FormElements>,
+    formData: SubmitFormData<FormElements>
   ) => {
     e.preventDefault()
 
@@ -30,8 +30,7 @@ export default function SearchForm() {
     <div className={searchWrapper}>
       <form
         className={inputWrapper}
-        onSubmit={handleOnSubmit(handleSearchSubmit)}
-      >
+        onSubmit={handleOnSubmit(handleSearchSubmit)}>
         <div className="flex-center">
           {searchText}
           <Button icon={submitButton} buttonType="submit" />
@@ -39,7 +38,7 @@ export default function SearchForm() {
             <Button
               title="검색조건"
               style={{
-                button: searchOption.button,
+                button: searchOption.button
               }}
             />
           </div>
