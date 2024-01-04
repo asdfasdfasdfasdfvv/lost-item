@@ -33,7 +33,12 @@
           {
             "singleQuote": true,
             "endOfLine": "auto",
-            "semi": false
+            "semi": false,
+            "useTabs": false,
+            "trailingComma": "none",
+            "tabWidth": 2,
+            "bracketSpacing": true,
+            "jsxBracketSameLine": true
           }
         ],
         "semi": "off",
