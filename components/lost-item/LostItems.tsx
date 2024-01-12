@@ -4,11 +4,11 @@ import { modalContentState } from 'atom/modalAtom'
 import useInfiniteScroll from 'hooks/useInfiniteScroll'
 import { Suspense, useRef, useState } from 'react'
 import { useSetRecoilState } from 'recoil'
+import type { LostItemResponse } from 'types/api/lost'
 
 import LostItem from './LostItem'
 import LostItemDetail from './LostItemDetail'
 
-const pageSize = 10
 export default function LostItems() {
   const setModal = useSetRecoilState(modalContentState)
   const loader = useRef<HTMLDivElement | null>(null)
@@ -17,12 +17,15 @@ export default function LostItems() {
     setPage((prev) => prev + 1)
   }
 
-  const { isLoading, data } = useQuery<any>({
+  const { isLoading, data, isPending } = useQuery<LostItemResponse>({
     queryKey: ['lostItemList'],
     queryFn: async () => {
-      const result = await fetch('/v1/lost/items/', { method: 'GET' })
-      const { body } = await result.json()
-      return body
+      const result = await fetch('/v1/founds', { method: 'GET' })
+      if (result.status === 200) {
+        const { data } = await result.json()
+        return data || {}
+      }
+      return {}
     }
   })
 
@@ -31,11 +34,10 @@ export default function LostItems() {
     callback: fetchMoreItems
   })
 
-  const currentPageData = data?.slice(0, (page + 1) * pageSize)
-
-  if (!data || currentPageData.length < 1) {
+  if (!data && isPending) {
     return <div>No Result</div>
   }
+  const currentPageData = data
 
   const handleClickLostItem = (lostItemId: any) => {
     setModal(<LostItemDetail lostItemId={lostItemId} />)
@@ -44,16 +46,16 @@ export default function LostItems() {
   return (
     <ul className="w-full max-w-80">
       <Suspense fallback={isLoading}>
-        {currentPageData.map(
+        {currentPageData?.content.map(
           (
-            { articleId, lostDate, lostPlace, name, subject }: any,
+            { articleId, foundAt, locationName, productName, subject },
             _: number
           ) => (
             <LostItem
               key={articleId}
-              lostDate={lostDate}
-              lostPlace={lostPlace}
-              title={name}
+              lostDate={foundAt}
+              lostPlace={locationName}
+              title={productName}
               subject={subject}
               hanldeClickLostItem={() => handleClickLostItem(articleId)}
             />
