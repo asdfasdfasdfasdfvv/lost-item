@@ -1,6 +1,7 @@
 // useInfiniteScroll.ts
 import type { RefObject } from 'react'
 import { useEffect, useRef, useState } from 'react'
+import { throttle } from 'utils/timing'
 
 interface UseInfiniteScrollProps {
   target: RefObject<HTMLDivElement | null> // or HTMLElement, depending on your use case
@@ -15,11 +16,11 @@ const useInfiniteScroll = ({
   parent = null,
   threshold = 0.1,
   rootMargin = '0px',
-  callback,
+  callback
 }: UseInfiniteScrollProps): boolean => {
   const [isIntersecting, setIsIntersecting] = useState<boolean>(false)
   const observer = useRef<IntersectionObserver | null>(null)
-
+  const throttledCallback = useRef(throttle(callback, 200)).current
   useEffect(() => {
     if (target && !target.current) {
       return
@@ -27,13 +28,13 @@ const useInfiniteScroll = ({
     const opts: IntersectionObserverInit = {
       root: parent,
       rootMargin,
-      threshold,
+      threshold
     }
     observer.current = new IntersectionObserver((entries) => {
       const [entry] = entries
       if (entry.isIntersecting) {
         setIsIntersecting(true)
-        callback()
+        throttledCallback()
       } else {
         setIsIntersecting(false)
       }
