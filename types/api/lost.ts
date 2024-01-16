@@ -40,3 +40,17 @@ export type LostItemResponse = {
   numberOfElements: number
   empty: boolean
 }
+export type LostItemRequestType = {
+  location?: string
+  subject?: string
+  classification?: string
+  startDate?: string
+  endDate?: string
+  page?: number
+  size?: number
+  sort?: {
+    key: string
+    direction: 'ASC' | 'DESC'
+  }[]
+  offset?: number
+}

@@ -1,66 +1,89 @@
 'use client'
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { modalContentState } from 'atom/modalAtom'
 import useInfiniteScroll from 'hooks/useInfiniteScroll'
-import { Suspense, useRef, useState } from 'react'
+import { Fragment, Suspense, useRef, useState } from 'react'
 import { useSetRecoilState } from 'recoil'
-import type { LostItemResponse } from 'types/api/lost'
+import type { LostItemRequestType, LostItemResponse } from 'types/api/lost'
+import { buildUrlWithParams } from 'utils/api'
 
 import LostItem from './LostItem'
 import LostItemDetail from './LostItemDetail'
 
+const getLostItemList = async ({ pageParam = 0 }) => {
+  console.log('pageNumber', pageParam)
+  const url = buildUrlWithParams('/v1/founds', {
+    page: pageParam
+  })
+  const result = await fetch(url)
+  if (result.status === 200) {
+    const { data } = await result.json()
+    return data || {}
+  }
+}
+
 export default function LostItems() {
   const setModal = useSetRecoilState(modalContentState)
   const loader = useRef<HTMLDivElement | null>(null)
-  const [page, setPage] = useState(0)
-  const fetchMoreItems = () => {
-    setPage((prev) => prev + 1)
-  }
 
-  const { isLoading, data, isPending } = useQuery<LostItemResponse>({
-    queryKey: ['lostItemList'],
-    queryFn: async () => {
-      const result = await fetch('/v1/founds', { method: 'GET' })
-      if (result.status === 200) {
-        const { data } = await result.json()
-        return data || {}
-      }
-      return {}
-    }
+  const [searchParams] = useState<LostItemRequestType>({
+    size: 10
   })
+
+  const { data, isLoading, fetchNextPage, isFetching, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: ['lostItemList', searchParams],
+      initialPageParam: 0,
+      queryFn: getLostItemList,
+      getNextPageParam: (lastPage: LostItemResponse) => {
+        return !lastPage.last ? lastPage.number + 1 : lastPage.number
+      }
+    })
 
   const isIntersecting = useInfiniteScroll({
     target: loader,
-    callback: fetchMoreItems
+    threshold: 0.3,
+    callback: () => {
+      if (isFetching && !isFetchingNextPage) fetchNextPage()
+    }
   })
 
-  if (!data && isPending) {
+  if (!data) {
     return <div>No Result</div>
   }
-  const currentPageData = data
 
   const handleClickLostItem = (lostItemId: any) => {
     setModal(<LostItemDetail lostItemId={lostItemId} />)
   }
-
+  console.log(data)
   return (
     <ul className="w-full max-w-80">
       <Suspense fallback={isLoading}>
-        {currentPageData?.content.map(
-          (
-            { articleId, foundAt, locationName, productName, subject },
-            _: number
-          ) => (
-            <LostItem
-              key={articleId}
-              lostDate={foundAt}
-              lostPlace={locationName}
-              title={productName}
-              subject={subject}
-              hanldeClickLostItem={() => handleClickLostItem(articleId)}
-            />
-          )
-        )}
+        {data.pages.map((group: LostItemResponse, i) => (
+          <Fragment key={i}>
+            {group.content.map(
+              ({
+                articleId,
+                foundAt,
+                locationName,
+                productName,
+                subject,
+                depositPlace
+              }) => (
+                <LostItem
+                  key={articleId}
+                  lostDate={foundAt}
+                  lostPlace={locationName}
+                  title={productName}
+                  subject={subject}
+                  depositPlace={depositPlace}
+                  handleClickLostItem={() => handleClickLostItem(articleId)}
+                />
+              )
+            )}
+          </Fragment>
+        ))}
+
         <div ref={loader}>{isIntersecting && <p>Loading more items...</p>}</div>
       </Suspense>
     </ul>
