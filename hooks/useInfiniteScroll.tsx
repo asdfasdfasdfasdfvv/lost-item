@@ -20,7 +20,7 @@ const useInfiniteScroll = ({
 }: UseInfiniteScrollProps): boolean => {
   const [isIntersecting, setIsIntersecting] = useState<boolean>(false)
   const observer = useRef<IntersectionObserver | null>(null)
-  const throttledCallback = useRef(throttle(callback, 200)).current
+  const throttledCallback = useRef(throttle(callback, 1000)).current
   useEffect(() => {
     if (target && !target.current) {
       return
