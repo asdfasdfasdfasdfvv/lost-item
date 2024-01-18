@@ -43,9 +43,8 @@ const LostItemDetail: React.FC<LostItemPageProps> = ({
 }: LostItemPageProps) => {
   const setModal = useSetRecoilState(modalContentState)
   const { data, isLoading } = useQuery<LostItemDetails>({
-    queryKey: ['lostItemDetial'],
+    queryKey: ['lostItemDetail'],
     queryFn: async () => {
-      console.log(lostItemId)
       const res = await fetch(`/v1/lost/items/${lostItemId}`, { method: 'GET' })
       const { body } = await res.json()
 

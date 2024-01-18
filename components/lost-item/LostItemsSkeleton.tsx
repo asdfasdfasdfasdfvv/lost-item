@@ -7,7 +7,7 @@ interface Props {
 
 const LostItemSkeleton = () => {
   return (
-    <div className="mb-5 flex h-28 w-full items-center bg-gray-100 px-5">
+    <div className="mb-box flex h-28 w-full max-w-80 shrink-0 rounded-lg-plus bg-white px-2 pt-3 shadow-box">
       <CircleSkeleton className="mr-5pxr h-25pxr w-25pxr" />
       <div className="h-14 w-full">
         <LineSkeleton className="h-4 w-full" />
@@ -18,9 +18,9 @@ const LostItemSkeleton = () => {
   )
 }
 
-export default function LostItemsSkeleton({ size = 10 }: Props) {
+export default function LostItemsSkeleton({ size = 20 }: Props) {
   return (
-    <div className="w-full max-w-80">
+    <div className="relative w-full max-w-80">
       {Array.from({ length: size }, (_, key) => (
         <LostItemSkeleton key={key} />
       ))}
