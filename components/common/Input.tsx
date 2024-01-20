@@ -1,34 +1,29 @@
 import { useState } from 'react'
+import React from 'react'
 import type { FormError } from 'types/form'
 import type { InputStyle } from 'types/style/common'
 import tw from 'utils/twMergeObjects'
 
-interface InputProps {
-  value?: string | number
+import type { InputProps } from '../ui/input'
+import { RadixInput } from '../ui/input'
+
+type CommonInputProps = InputProps & {
   style?: InputStyle
-  name: string
-  disabled?: boolean
-  placeholder?: string
-  type: string
   label?: string
   validatePlaceholder?: string[]
   inputRef?: React.RefObject<HTMLInputElement>
   invalidMessage?: FormError
-  handleInputChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
-  handleInputFocus?: (event: React.FocusEvent<HTMLInputElement>) => void
-  handleInputBlur?: (event: React.FocusEvent<HTMLInputElement>) => void
 }
 
 const twInputStyles = {
   wrapper: 'w-full flex flex-col',
-  input: 'text-gray-900',
+  input: '',
   label: 'font-normal text-base text-white/[0.87] mb-8pxr',
   invalidMessage: 'text-red-500 text-sm h-15pxr'
 }
 
 const Input = ({
   value = '',
-  disabled = false,
   style,
   name,
   inputRef,
@@ -37,20 +32,17 @@ const Input = ({
   invalidMessage,
   validatePlaceholder,
   type = 'text',
-  handleInputFocus,
-  handleInputChange,
-  handleInputBlur
-}: InputProps) => {
+  ...props
+}: CommonInputProps) => {
   const st = tw<InputStyle>(twInputStyles, style)
+
   const [isFocused, setIsFocused] = useState(false)
 
-  const onFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+  const onFocus = () => {
     setIsFocused(true)
-    handleInputFocus?.(event)
   }
-  const onBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+  const onBlur = () => {
     setIsFocused(false)
-    handleInputBlur?.(event)
   }
   return (
     <div className={st.wrapper}>
@@ -59,17 +51,16 @@ const Input = ({
           {label}
         </label>
       )}
-      <input
+      <RadixInput
         ref={inputRef}
         className={st.input}
-        onChange={handleInputChange}
+        name={name}
         onFocus={onFocus}
         onBlur={onBlur}
-        name={name}
-        disabled={disabled}
         type={type}
         placeholder={placeholder}
         defaultValue={value}
+        {...props}
       />
 
       {isFocused && validatePlaceholder && (
