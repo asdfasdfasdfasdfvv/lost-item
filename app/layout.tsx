@@ -3,12 +3,17 @@ import './globals.css'
 import Modal from 'components/common/Modal'
 import BaseLayout from 'components/layout/Layout'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter as FontSans } from 'next/font/google'
 import ModalProvider from 'providers/ModalProvider'
 import RecoilProvider from 'providers/RecoilProvider'
 import TanstackProvider from 'providers/TanstackProvider'
 
-const inter = Inter({ subsets: ['latin'] })
+import { cn } from '@/lib/utils'
+
+const fontSans = FontSans({
+  subsets: ['latin'],
+  variable: '--font-sans'
+})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -22,7 +27,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body
+        className={cn(
+          'min-h-screen bg-background font-sans antialiased',
+          fontSans.variable
+        )}>
         <RecoilProvider>
           <TanstackProvider>
             <BaseLayout>{children}</BaseLayout>
