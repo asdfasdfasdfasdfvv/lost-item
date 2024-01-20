@@ -36,7 +36,7 @@ export default function LostItems() {
       initialPageParam: 0,
       queryFn: getLostItemList,
       getNextPageParam: (lastPage: LostItemResponse) => {
-        return !lastPage.last ? lastPage.number + 1 : lastPage.number
+        return !lastPage?.last ? lastPage.number + 1 : lastPage.number
       }
     })
 
