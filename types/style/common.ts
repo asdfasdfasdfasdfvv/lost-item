@@ -5,7 +5,7 @@ export type InputStyle = {
   invalidMessage?: string
 }
 export type ButtonStyle = {
-  button?: string
+  wrapper?: string
   icon?: string
   imageIcon?: string
   title?: string
