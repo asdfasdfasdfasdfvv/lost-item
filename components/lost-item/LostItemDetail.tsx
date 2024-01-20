@@ -101,7 +101,7 @@ const LostItemDetail: React.FC<LostItemPageProps> = ({
       </div>
       <Button
         title="확인"
-        handler={() => {
+        onClick={() => {
           setModal(null)
         }}
       />
