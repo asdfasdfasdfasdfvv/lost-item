@@ -9,8 +9,7 @@ import type { SubmitFormData } from 'types/form'
 
 import SearchFormOptions from './SearchFormOptions'
 
-const { searchWrapper, inputWrapper, submitButton, searchOption } =
-  SearchFormStyle
+const { searchWrapper, inputWrapper, submitButton } = SearchFormStyle
 
 export default function SearchForm() {
   const { getFormFields, handleOnSubmit } = useForm(SearchSchema)
@@ -34,14 +33,6 @@ export default function SearchForm() {
         <div className="flex-center">
           {searchText}
           <Button icon={submitButton} buttonType="submit" />
-          <div className={searchOption.wrapper}>
-            <Button
-              title="검색조건"
-              style={{
-                button: searchOption.button
-              }}
-            />
-          </div>
         </div>
         <SearchFormOptions getFormFields={getFormFields} />
       </form>

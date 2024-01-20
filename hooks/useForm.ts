@@ -53,17 +53,16 @@
  * Note: Replace T with the appropriate type or interface representing your form's field names.
  */
 
-import type { FormEvent, MutableRefObject } from 'react'
+import type { ChangeEvent, FormEvent, MutableRefObject } from 'react'
 import { createRef, useRef, useState } from 'react'
 import type {
   FormFieldRender,
-  FormFields,
   FormKeys,
   FormRefs,
   FormSchema,
   FormState,
   FormValidateFields,
-  SubmitFormData,
+  SubmitFormData
 } from 'types/form'
 
 type UseInputSchemaReturn<T extends keyof FormKeys> = {
@@ -74,41 +73,43 @@ type UseInputSchemaReturn<T extends keyof FormKeys> = {
   handleOnSubmit: (
     submit: (
       e: FormEvent<HTMLFormElement>,
-      formData: SubmitFormData<T>,
-    ) => Promise<void>,
+      formData: SubmitFormData<T>
+    ) => Promise<void>
   ) => (event: FormEvent<HTMLFormElement>) => Promise<void>
 
   getFormFields: () => {
     renderFields: FormFieldRender<T>
-    formFields: FormFields<T>
   }
 }
 
 const generateFormFields = <T extends keyof FormKeys>(
   formSchema: FormSchema<T>,
   event: {
-    handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  },
-): { renderFields: FormFieldRender<T>; formFields: FormFields<T> } => {
-  const formFields = {} as FormFields<T>
+    [x: string]: any
+    handleOnChange?: (event: ChangeEvent<HTMLInputElement>) => void
+  }
+): { renderFields: FormFieldRender<T> } => {
   const renderFields = {} as FormFieldRender<T>
   const keys = Object.keys(formSchema) as T[]
 
   keys.forEach((key) => {
-    formFields[key] = { ...formSchema[key], ...event }
-    renderFields[key] = formFields[key].component?.(formFields[key]) || null
+    // eslint-disable-next-line unused-imports/no-unused-vars
+    const { controlled, component, validate, ...props } = formSchema[key]
+
+    renderFields[key] =
+      formSchema[key].component?.({ ...props, ...event }) || null
   })
 
-  return { renderFields, formFields }
+  return { renderFields }
 }
 const initializeFormRefs = <T extends keyof FormKeys>(
   formState: FormSchema<T>,
-  formRefs: React.MutableRefObject<FormRefs<T>>,
+  formRefs: React.MutableRefObject<FormRefs<T>>
 ): void => {
   const keys = Object.keys(formState) as T[]
 
   keys.forEach((input) => {
-    if (formState[input]?.isControlled && !formRefs.current[input]) {
+    if (formState[input]?.controlled && !formRefs.current[input]) {
       // eslint-disable-next-line no-param-reassign
       formRefs.current[input] = createRef()
     }
@@ -117,20 +118,20 @@ const initializeFormRefs = <T extends keyof FormKeys>(
 
 const generateInitFormState = <T extends keyof FormKeys>(
   formState: FormSchema<T>,
-  formRefs: React.MutableRefObject<FormRefs<T>>,
+  formRefs: React.MutableRefObject<FormRefs<T>>
 ): FormSchema<T> => {
   return (Object.keys(formState) as T[]).reduce<FormSchema<T>>((acc, input) => {
     return {
       ...acc,
       [input]: {
         ...(formState[input] || {}),
-        ref: formState[input]?.isControlled ? formRefs.current[input] : null,
-      },
+        ref: formState[input]?.controlled ? formRefs.current[input] : null
+      }
     }
   }, {} as FormSchema<T>)
 }
 const checkFormValid = <T extends keyof FormKeys>(
-  nextForm: FormState<T>,
+  nextForm: FormState<T>
 ): boolean => {
   const formValues = Object.values(nextForm) as FormValidateFields[]
   const hasErrors = formValues.some((data) => data && data.error !== null)
@@ -138,14 +139,14 @@ const checkFormValid = <T extends keyof FormKeys>(
 }
 
 const getFormData = <T extends keyof FormKeys>(
-  form: FormState<T>,
+  form: FormState<T>
 ): SubmitFormData<T> => {
   const keys = Object.keys(form) as T[]
   const formData = keys.reduce((acc, input: T) => {
     const data = form[input]
     return {
       ...acc,
-      [input]: data!.value,
+      [input]: data!.value
     }
   }, {} as SubmitFormData<T>)
   return formData
@@ -153,7 +154,7 @@ const getFormData = <T extends keyof FormKeys>(
 
 const useForm = <T extends keyof FormKeys>(
   formSchema: FormSchema<T>,
-  options?: FormSchema<T>,
+  options?: FormSchema<T>
 ): UseInputSchemaReturn<T> => {
   const formRefs = useRef<FormRefs<T>>({})
   const initFormState = { ...formSchema, ...options }
@@ -167,8 +168,8 @@ const useForm = <T extends keyof FormKeys>(
       ...acc,
       [input]: {
         value,
-        error: validate(value),
-      },
+        error: validate(value)
+      }
     }
   }, {})
 
@@ -179,10 +180,10 @@ const useForm = <T extends keyof FormKeys>(
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
     const errorMessage = formSchema[name as T]?.validate(value, form)
-
+    console.log(name, value)
     const changedForm = {
       ...form,
-      [name]: { value, error: errorMessage },
+      [name]: { value, error: errorMessage }
     } as FormState<T>
     setForm(changedForm)
     formStateRefs.current = changedForm
@@ -190,16 +191,15 @@ const useForm = <T extends keyof FormKeys>(
   }
   const getFormFields = () => {
     const event = {
-      handleInputChange: handleOnChange,
+      handleOnChange
     }
-
     return generateFormFields(preprocessedFormState, event)
   }
   const handleOnSubmit =
     (onSubmit: {
       (
         e: FormEvent<HTMLFormElement>,
-        formData: SubmitFormData<T>,
+        formData: SubmitFormData<T>
       ): Promise<void>
     }) =>
     async (formSubmit: FormEvent<HTMLFormElement>) => {
@@ -217,7 +217,7 @@ const useForm = <T extends keyof FormKeys>(
     handleOnChange,
     isFormValid: isFormValid.current,
     handleOnSubmit,
-    getFormFields,
+    getFormFields
   }
 }
 

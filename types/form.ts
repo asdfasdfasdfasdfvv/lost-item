@@ -3,7 +3,7 @@ import type { FormEvent, RefObject } from 'react'
 export const INPUT_TYPE = {
   text: 'text',
   password: 'password',
-  date: 'date',
+  date: 'date'
 } as const
 
 export type InputType = keyof typeof INPUT_TYPE
@@ -21,7 +21,7 @@ export type FormState<T extends keyof FormKeys> = Partial<{
 export type FormFieldValue<T extends keyof FormKeys> = {
   value: string | number
   error?: FormError
-  isControlled?: boolean
+  controlled?: boolean
   ref?: RefObject<HTMLInputElement>
   name: T
   type: InputType
@@ -31,7 +31,7 @@ export type FormFieldValue<T extends keyof FormKeys> = {
   validatePlaceholder?: string[]
   validate: (
     value: string | number,
-    formState?: FormState<T> | undefined,
+    formState?: FormState<T> | undefined
   ) => FormError
   onChange?: () => void
   component?: ({ ...args }) => JSX.Element
@@ -46,6 +46,10 @@ export type FormSchema<T extends keyof FormKeys> = {
 export type FormFields<T extends keyof FormKeys> = {
   [K in T]: FormFieldValue<T>
 }
+export type OmittedFormFieldValue<T extends keyof FormKeys> = Omit<
+  FormFieldValue<T>,
+  'validate' | 'controlled' | 'component'
+>
 
 export type ResponseError = {
   details: string

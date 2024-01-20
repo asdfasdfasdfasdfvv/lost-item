@@ -1,10 +1,6 @@
-import type { FormElements } from 'constants/search/schema'
-import type { FormFields } from 'types/form'
-
 interface SearchFormOptionsProps {
   getFormFields: () => {
     renderFields: any
-    formFields: FormFields<FormElements>
   }
 }
 export default function SearchFormOptions({
