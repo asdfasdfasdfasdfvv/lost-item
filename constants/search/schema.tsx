@@ -6,6 +6,7 @@ export type FormElements =
   | 'startDate'
   | 'endDate'
   | 'lostLocation'
+
 export const SearchSchema: FormSchema<FormElements> = {
   searchText: {
     key: 'searchForm_searchText',
@@ -13,7 +14,7 @@ export const SearchSchema: FormSchema<FormElements> = {
     type: 'text',
     controlled: true,
     name: 'searchText',
-    label: '',
+    label: '검색',
     placeholder: '검색어 입력',
     component: (args) => {
       const { handleOnChange, key, ref, ...props } = args
@@ -34,7 +35,7 @@ export const SearchSchema: FormSchema<FormElements> = {
     type: 'text',
     controlled: true,
     name: 'lostLocation',
-    label: '',
+    label: '분실 장소',
     placeholder: '분실 장소',
     component: (args) => {
       const { handleOnChange, key, ref, ...props } = args

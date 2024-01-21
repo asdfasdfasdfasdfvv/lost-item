@@ -30,7 +30,7 @@ export default function SearchForm() {
       <form
         className={inputWrapper}
         onSubmit={handleOnSubmit(handleSearchSubmit)}>
-        <div className="flex-center">
+        <div className="flex items-end">
           {searchText}
           <Button icon={submitButton} buttonType="submit" />
         </div>

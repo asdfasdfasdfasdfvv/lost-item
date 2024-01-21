@@ -1,6 +1,11 @@
+import type { FormElements } from 'constants/search/schema'
+import type { FormFieldRender } from 'types/form'
+
+import { RadixLabel } from '../ui/label'
+
 interface SearchFormOptionsProps {
   getFormFields: () => {
-    renderFields: any
+    renderFields: FormFieldRender<FormElements>
   }
 }
 export default function SearchFormOptions({
@@ -12,13 +17,13 @@ export default function SearchFormOptions({
   return (
     <div className="flex flex-col">
       <div className="mb-10pxr flex items-center justify-start">
-        <div className="mr-5pxr text-title">분실장소:</div>
-        <div className="flex items-center justify-start">{lostLocation}</div>
+        <div className="flex w-full items-center justify-start">
+          {lostLocation}
+        </div>
       </div>
-
-      <div className="flex items-center justify-start">
-        <div className="mr-5pxr text-title">조회기간:</div>
-        <div className="flex items-center justify-start">
+      <div className="flex flex-col items-start justify-start">
+        <RadixLabel>조회 기간</RadixLabel>
+        <div className="mt-2 flex items-center justify-start">
           {startDate}~{endDate}
         </div>
       </div>

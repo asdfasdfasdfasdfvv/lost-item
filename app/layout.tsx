@@ -7,6 +7,7 @@ import { Inter as FontSans } from 'next/font/google'
 import ModalProvider from 'providers/ModalProvider'
 import RecoilProvider from 'providers/RecoilProvider'
 import TanstackProvider from 'providers/TanstackProvider'
+import { ThemeProvider } from 'providers/ThemeProvider'
 
 import { cn } from '@/lib/utils'
 
@@ -26,19 +27,25 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          'min-h-screen bg-background font-sans antialiased',
+          'min-h-screen bg-background font-sans antialiased w-full max-w-375pxr flex flex-col justify-center self-center mx-auto',
           fontSans.variable
         )}>
-        <RecoilProvider>
-          <TanstackProvider>
-            <BaseLayout>{children}</BaseLayout>
-            <Modal />
-          </TanstackProvider>
-        </RecoilProvider>
-        <ModalProvider />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="default"
+          enableSystem
+          disableTransitionOnChange>
+          <RecoilProvider>
+            <TanstackProvider>
+              <BaseLayout>{children}</BaseLayout>
+              <Modal />
+            </TanstackProvider>
+          </RecoilProvider>
+          <ModalProvider />
+        </ThemeProvider>
       </body>
     </html>
   )

@@ -7,6 +7,7 @@ import { useSetRecoilState } from 'recoil'
 import type { LostItemRequestType, LostItemResponse } from 'types/api/lost'
 import { buildUrlWithParams } from 'utils/api'
 
+import ScrollLayout from '../layout/ScrollLayout'
 import LostItem from './LostItem'
 import LostItemDetail from './LostItemDetail'
 import LostItemsSkeleton from './LostItemsSkeleton'
@@ -42,7 +43,7 @@ export default function LostItems() {
 
   useInfiniteScroll({
     target: loader,
-    rootMargin: '500px',
+    rootMargin: '50px',
     callback: () => {
       if (!isFetchingNextPage) {
         fetchNextPage()
@@ -62,8 +63,8 @@ export default function LostItems() {
   }
 
   return (
-    <>
-      <ul className="w-full max-w-80">
+    <ScrollLayout>
+      <ul>
         <Suspense fallback={isLoading}>
           {data.pages.map((group: LostItemResponse, i) => (
             <Fragment key={i}>
@@ -91,7 +92,11 @@ export default function LostItems() {
           ))}
         </Suspense>
       </ul>
-      {isFetchingNextPage ? <LostItemsSkeleton /> : <div ref={loader} />}
-    </>
+      {isFetchingNextPage ? (
+        <LostItemsSkeleton />
+      ) : (
+        <div ref={loader} className="relative min-h-10pxr" />
+      )}
+    </ScrollLayout>
   )
 }

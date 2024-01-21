@@ -124,7 +124,8 @@ const config: Config = {
 
       addUtilities(newUtilities)
     },
-    require('tailwindcss-animate')
+    require('tailwindcss-animate'),
+    require('tailwind-scrollbar-hide')
   ]
 }
 export default config

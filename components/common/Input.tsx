@@ -6,6 +6,7 @@ import tw from 'utils/twMergeObjects'
 
 import type { InputProps } from '../ui/input'
 import { RadixInput } from '../ui/input'
+import { RadixLabel } from '../ui/label'
 
 type CommonInputProps = InputProps & {
   style?: InputStyle
@@ -16,9 +17,9 @@ type CommonInputProps = InputProps & {
 }
 
 const twInputStyles = {
-  wrapper: 'w-full flex flex-col',
+  wrapper: 'w-full flex flex-col border-none',
   input: '',
-  label: 'font-normal text-base text-white/[0.87] mb-8pxr',
+  label: 'mb-2 mt-2',
   invalidMessage: 'text-red-500 text-sm h-15pxr'
 }
 
@@ -47,9 +48,9 @@ const Input = ({
   return (
     <div className={st.wrapper}>
       {label && (
-        <label className={st.label} htmlFor={name}>
+        <RadixLabel className={st.label} htmlFor={name}>
           {label}
-        </label>
+        </RadixLabel>
       )}
       <RadixInput
         ref={inputRef}

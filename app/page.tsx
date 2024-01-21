@@ -3,9 +3,9 @@ import SearchForm from 'components/search/SearchForm'
 
 export default function Home() {
   return (
-    <main className="flex flex-col items-center justify-between p-24pxr">
+    <section className="flex flex-col overflow-hidden">
       <SearchForm />
       <LostItems />
-    </main>
+    </section>
   )
 }
