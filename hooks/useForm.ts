@@ -73,7 +73,8 @@ type UseInputSchemaReturn<T extends keyof FormKeys> = {
   handleOnSubmit: (
     submit: (
       e: FormEvent<HTMLFormElement>,
-      formData: SubmitFormData<T>
+      formData: SubmitFormData<T>,
+      formStatus: { isFormValid: boolean; error?: string | null }
     ) => Promise<void>
   ) => (event: FormEvent<HTMLFormElement>) => Promise<void>
 
@@ -152,6 +153,18 @@ const getFormData = <T extends keyof FormKeys>(
   return formData
 }
 
+const findFirstErrorMessage = <T extends keyof FormKeys>(
+  obj: FormState<T>
+): string | null => {
+  for (const key of Object.keys(obj) as (keyof FormState<T>)[]) {
+    const item = obj[key]
+    if (item?.error) {
+      return item.error
+    }
+  }
+  return null
+}
+
 const useForm = <T extends keyof FormKeys>(
   formSchema: FormSchema<T>,
   options?: FormSchema<T>
@@ -163,7 +176,6 @@ const useForm = <T extends keyof FormKeys>(
   const keys = Object.keys(preprocessedFormState) as T[]
   const initForm = keys.reduce<FormState<T>>((acc, input: T) => {
     const { value, validate } = formSchema[input]
-
     return {
       ...acc,
       [input]: {
@@ -199,16 +211,20 @@ const useForm = <T extends keyof FormKeys>(
     (onSubmit: {
       (
         e: FormEvent<HTMLFormElement>,
-        formData: SubmitFormData<T>
+        formData: SubmitFormData<T>,
+        formStatus: { isFormValid: boolean; error?: string | null }
       ): Promise<void>
     }) =>
     async (formSubmit: FormEvent<HTMLFormElement>) => {
       formSubmit.preventDefault()
-
-      if (isFormValid.current) {
-        onSubmit(formSubmit, getFormData(form))
+      const formStatus = {
+        isFormValid: isFormValid.current,
+        error: isFormValid.current
+          ? null
+          : findFirstErrorMessage(formStateRefs.current)
       }
-      // Todo inValidate form error handle
+
+      onSubmit(formSubmit, getFormData(form), formStatus)
     }
 
   return {

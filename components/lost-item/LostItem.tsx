@@ -20,7 +20,7 @@ export default function LostItem({
   return (
     <li
       onClick={handleClickLostItem}
-      className="mb-box flex h-28 w-full max-w-80 shrink-0 rounded-lg-plus bg-white px-2 pt-3 shadow-box">
+      className="mb-box box-border flex h-28 w-full shrink-0 rounded-lg-plus bg-white px-2 pt-3 shadow-box">
       <div className="flex flex-[7] flex-col ">
         <span className="mb-item line-clamp-1 text-base text-title">
           {title}

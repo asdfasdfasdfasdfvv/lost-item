@@ -17,7 +17,7 @@ type CommonInputProps = InputProps & {
 }
 
 const twInputStyles = {
-  wrapper: 'w-full flex flex-col border-none',
+  wrapper: 'w-full flex flex-col border-none box-border px-3pxr',
   input: '',
   label: 'mb-2 mt-2',
   invalidMessage: 'text-red-500 text-sm h-15pxr'

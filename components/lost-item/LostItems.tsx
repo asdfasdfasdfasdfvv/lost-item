@@ -2,7 +2,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { modalContentState } from 'atom/modalAtom'
 import useInfiniteScroll from 'hooks/useInfiniteScroll'
-import { Fragment, Suspense, useRef, useState } from 'react'
+import { Fragment, Suspense, useRef } from 'react'
 import { useSetRecoilState } from 'recoil'
 import type { LostItemRequestType, LostItemResponse } from 'types/api/lost'
 import { buildUrlWithParams } from 'utils/api'
@@ -12,24 +12,36 @@ import LostItem from './LostItem'
 import LostItemDetail from './LostItemDetail'
 import LostItemsSkeleton from './LostItemsSkeleton'
 
-const getLostItemList = async ({ pageParam = 0 }) => {
+export const getLostItemList = async ({
+  pageParam = 0,
+  queryKey
+}: {
+  pageParam: number
+  queryKey: (string | LostItemRequestType)[]
+}) => {
+  const searchParams = queryKey[1]
+
   const url = buildUrlWithParams('/v1/founds', {
+    ...(searchParams as LostItemRequestType),
     page: pageParam
   })
+
   const result = await fetch(url)
+
   if (result.status === 200) {
     const { data } = await result.json()
-    return data || {}
+
+    return data || null
   }
+  return null
 }
 
-export default function LostItems() {
+interface Props {
+  searchParams: LostItemRequestType
+}
+export default function LostItems({ searchParams }: Props) {
   const setModal = useSetRecoilState(modalContentState)
   const loader = useRef<HTMLDivElement | null>(null)
-
-  const [searchParams] = useState<LostItemRequestType>({
-    size: 10
-  })
 
   const { data, isLoading, fetchNextPage, isFetchingNextPage } =
     useInfiniteQuery({
@@ -45,7 +57,7 @@ export default function LostItems() {
     target: loader,
     rootMargin: '50px',
     callback: () => {
-      if (!isFetchingNextPage) {
+      if (!isFetchingNextPage && data) {
         fetchNextPage()
       }
     }
@@ -54,6 +66,7 @@ export default function LostItems() {
   if (isLoading) {
     return <LostItemsSkeleton />
   }
+  console.log(data)
   if (!data) {
     return <div>No Result</div>
   }
@@ -64,7 +77,7 @@ export default function LostItems() {
 
   return (
     <ScrollLayout>
-      <ul>
+      <ul className="relative box-border w-full">
         <Suspense fallback={isLoading}>
           {data.pages.map((group: LostItemResponse, i) => (
             <Fragment key={i}>

@@ -24,7 +24,7 @@ export type FormFieldValue<T extends keyof FormKeys> = {
   controlled?: boolean
   ref?: RefObject<HTMLInputElement>
   name: T
-  id: T
+  id: string
   type: InputType
   placeholder?: string
   label?: string

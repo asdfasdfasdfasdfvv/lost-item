@@ -1,20 +1,16 @@
 import Input from 'components/common/Input'
 import type { FormSchema } from 'types/form'
 
-export type FormElements =
-  | 'searchText'
-  | 'startDate'
-  | 'endDate'
-  | 'lostLocation'
+export type FormElements = 'subject' | 'startDate' | 'endDate' | 'lostLocation'
 
 export const SearchSchema: FormSchema<FormElements> = {
-  searchText: {
+  subject: {
     key: 'searchForm_searchText',
     value: '',
     type: 'text',
     controlled: true,
-    id: 'searchText',
-    name: 'searchText',
+    id: 'subject',
+    name: 'subject',
     label: '검색',
     placeholder: '검색어 입력',
     component: (args) => {
@@ -23,10 +19,7 @@ export const SearchSchema: FormSchema<FormElements> = {
         <Input key={key} inputRef={ref} onChange={handleOnChange} {...props} />
       )
     },
-    validate: (value) => {
-      if (!value) {
-        return '입력이 필요합니다.'
-      }
+    validate: () => {
       return null
     }
   },

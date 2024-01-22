@@ -6,8 +6,6 @@ interface Props {
 
 export default function ScrollLayout({ children }: Props) {
   return (
-    <section className="flex w-full flex-col overflow-y-auto ">
-      {children}
-    </section>
+    <section className="overflow-y-auto scrollbar-hide">{children}</section>
   )
 }
