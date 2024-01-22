@@ -13,6 +13,7 @@ export const SearchSchema: FormSchema<FormElements> = {
     value: '',
     type: 'text',
     controlled: true,
+    id: 'searchText',
     name: 'searchText',
     label: '검색',
     placeholder: '검색어 입력',
@@ -35,6 +36,7 @@ export const SearchSchema: FormSchema<FormElements> = {
     type: 'text',
     controlled: true,
     name: 'lostLocation',
+    id: 'lostLocation',
     label: '분실 장소',
     placeholder: '분실 장소',
     component: (args) => {
@@ -52,6 +54,7 @@ export const SearchSchema: FormSchema<FormElements> = {
     key: 'searchFrom_startDate',
     value: '',
     type: 'date',
+    id: 'startDate',
     controlled: true,
     name: 'startDate',
     label: '',
@@ -70,6 +73,7 @@ export const SearchSchema: FormSchema<FormElements> = {
     value: '',
     type: 'date',
     controlled: true,
+    id: 'endDate',
     name: 'endDate',
     label: '',
     component: (args) => {
