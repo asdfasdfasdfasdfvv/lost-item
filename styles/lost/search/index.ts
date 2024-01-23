@@ -3,7 +3,7 @@ import type { InputStyle } from 'types/style/common'
 
 export const SearchFormStyle = {
   searchWrapper: 'w-full items-center justify-center pt-2pxr mb-10pxr',
-  inputWrapper: 'flex flex-col py-10pxr   rounded-lg px-5pxr box-border',
+  inputWrapper: 'flex flex-col py-10pxr rounded-lg px-5pxr box-border',
   searchInput: {
     input: 'bg-transparent px-4 text-title h-48pxr mr-5pxr'
   } as InputStyle,
@@ -17,3 +17,8 @@ export const SearchFormStyle = {
     button: 'bg-primary flex border rounded-lg p-5pxr text-white'
   }
 }
+
+export const SearchFormDateStyles = {
+  wrapper: 'min-w-170pxr',
+  input: 'min-w-170pxr'
+} as InputStyle

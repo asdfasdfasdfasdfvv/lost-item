@@ -1,4 +1,5 @@
 import Input from 'components/common/Input'
+import { SearchFormDateStyles } from 'styles/lost/search'
 import type { FormSchema } from 'types/form'
 
 export type FormElements = 'subject' | 'startDate' | 'endDate' | 'lostLocation'
@@ -36,7 +37,13 @@ export const SearchSchema: FormSchema<FormElements> = {
       const { handleOnChange, key, ref, ...props } = args
 
       return (
-        <Input key={key} inputRef={ref} onChange={handleOnChange} {...props} />
+        <Input
+          style={SearchFormDateStyles}
+          key={key}
+          inputRef={ref}
+          onChange={handleOnChange}
+          {...props}
+        />
       )
     },
     validate: () => {
@@ -54,7 +61,13 @@ export const SearchSchema: FormSchema<FormElements> = {
     component: (args) => {
       const { handleOnChange, key, ref, ...props } = args
       return (
-        <Input key={key} inputRef={ref} onChange={handleOnChange} {...props} />
+        <Input
+          style={SearchFormDateStyles}
+          key={key}
+          inputRef={ref}
+          onChange={handleOnChange}
+          {...props}
+        />
       )
     },
     validate: () => {
@@ -72,7 +85,13 @@ export const SearchSchema: FormSchema<FormElements> = {
     component: (args) => {
       const { handleOnChange, key, ref, ...props } = args
       return (
-        <Input key={key} inputRef={ref} onChange={handleOnChange} {...props} />
+        <Input
+          style={SearchFormDateStyles}
+          key={key}
+          inputRef={ref}
+          onChange={handleOnChange}
+          {...props}
+        />
       )
     },
     validate: () => {
