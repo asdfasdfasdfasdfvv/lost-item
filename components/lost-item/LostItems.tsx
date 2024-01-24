@@ -57,7 +57,7 @@ export default function LostItems({ searchParams }: Props) {
     target: loader,
     rootMargin: '50px',
     callback: () => {
-      if (!isFetchingNextPage && data) {
+      if (!isFetchingNextPage) {
         fetchNextPage()
       }
     }
@@ -66,7 +66,7 @@ export default function LostItems({ searchParams }: Props) {
   if (isLoading) {
     return <LostItemsSkeleton />
   }
-  console.log(data)
+
   if (!data) {
     return <div>No Result</div>
   }
@@ -105,7 +105,7 @@ export default function LostItems({ searchParams }: Props) {
           ))}
         </Suspense>
       </ul>
-      {isFetchingNextPage ? (
+      {isFetchingNextPage && !data ? (
         <LostItemsSkeleton />
       ) : (
         <div ref={loader} className="relative min-h-10pxr" />

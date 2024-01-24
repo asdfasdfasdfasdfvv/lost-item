@@ -36,7 +36,7 @@ const Input = ({
   ...props
 }: CommonInputProps) => {
   const st = tw<InputStyle>(twInputStyles, style)
-  console.log(st)
+
   const [isFocused, setIsFocused] = useState(false)
 
   const onFocus = () => {

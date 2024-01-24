@@ -19,6 +19,6 @@ export const SearchFormStyle = {
 }
 
 export const SearchFormDateStyles = {
-  wrapper: 'min-w-165pxr',
-  input: 'min-w-165pxr'
+  wrapper: 'min-w-162pxr',
+  input: 'min-w-162pxr'
 } as InputStyle

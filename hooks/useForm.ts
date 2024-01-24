@@ -192,7 +192,7 @@ const useForm = <T extends keyof FormKeys>(
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
     const errorMessage = formSchema[name as T]?.validate(value, form)
-    console.log(name, value)
+
     const changedForm = {
       ...form,
       [name]: { value, error: errorMessage }
