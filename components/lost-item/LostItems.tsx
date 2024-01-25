@@ -49,13 +49,16 @@ export default function LostItems({ searchParams }: Props) {
       initialPageParam: 0,
       queryFn: getLostItemList,
       getNextPageParam: (lastPage: LostItemResponse) => {
-        return !lastPage?.last ? lastPage.number + 1 : lastPage.number
+        if (lastPage?.last) {
+          return null
+        }
+        return lastPage.number + 1
       }
     })
 
   useInfiniteScroll({
     target: loader,
-    rootMargin: '50px',
+    rootMargin: '0px',
     callback: () => {
       if (!isFetchingNextPage) {
         fetchNextPage()
