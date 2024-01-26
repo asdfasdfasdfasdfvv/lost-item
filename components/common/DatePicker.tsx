@@ -30,7 +30,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, Props>(
   ({ title, style, onSelect, name }, ref) => {
     const st = tw<DateInputStyle>(twStyles, style)
 
-    const [date, setDate] = React.useState<Date>(new Date())
+    const [date, setDate] = React.useState<Date>()
     const [popoverOpen, setPopoverOpen] = React.useState(false)
 
     const handleUpdateDate = (selectedDay: Date | undefined) => {
