@@ -23,7 +23,7 @@ export default function SearchFormOptions({
       </div>
       <div className="flex flex-col items-start justify-start">
         <RadixLabel htmlFor="startDate">조회 기간</RadixLabel>
-        <div className="mt-2 flex items-center justify-start">
+        <div className="mt-2 flex w-full items-center justify-start">
           {startDate}~{endDate}
         </div>
       </div>

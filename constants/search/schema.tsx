@@ -1,6 +1,9 @@
 import Input from 'components/common/Input'
+import type { ChangeEvent } from 'react'
 import { SearchFormDateStyles } from 'styles/lost/search'
 import type { FormSchema } from 'types/form'
+
+import { DatePicker } from '@/components/common/DatePicker'
 
 export type FormElements = 'subject' | 'startDate' | 'endDate' | 'lostLocation'
 
@@ -16,9 +19,10 @@ export const SearchSchema: FormSchema<FormElements> = {
     placeholder: '검색어 입력',
     component: (args) => {
       const { handleOnChange, key, ref, ...props } = args
-      return (
-        <Input key={key} inputRef={ref} onChange={handleOnChange} {...props} />
-      )
+      const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+        handleOnChange({ event: e })
+      }
+      return <Input key={key} inputRef={ref} onChange={onChange} {...props} />
     },
     validate: () => {
       return null
@@ -35,13 +39,15 @@ export const SearchSchema: FormSchema<FormElements> = {
     placeholder: '분실 장소',
     component: (args) => {
       const { handleOnChange, key, ref, ...props } = args
-
+      const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+        handleOnChange({ event: e })
+      }
       return (
         <Input
           style={SearchFormDateStyles}
           key={key}
           inputRef={ref}
-          onChange={handleOnChange}
+          onChange={onChange}
           {...props}
         />
       )
@@ -59,13 +65,13 @@ export const SearchSchema: FormSchema<FormElements> = {
     name: 'startDate',
     label: '',
     component: (args) => {
-      const { handleOnChange, key, ref, ...props } = args
+      const { handleOnChange, key, name, ...props } = args
       return (
-        <Input
-          style={SearchFormDateStyles}
+        <DatePicker
+          name={name}
+          onSelect={handleOnChange}
+          title="시작일"
           key={key}
-          inputRef={ref}
-          onChange={handleOnChange}
           {...props}
         />
       )
@@ -83,13 +89,13 @@ export const SearchSchema: FormSchema<FormElements> = {
     name: 'endDate',
     label: '',
     component: (args) => {
-      const { handleOnChange, key, ref, ...props } = args
+      const { handleOnChange, key, name, ...props } = args
       return (
-        <Input
-          style={SearchFormDateStyles}
+        <DatePicker
+          name={name}
+          onSelect={handleOnChange}
+          title="종료일"
           key={key}
-          inputRef={ref}
-          onChange={handleOnChange}
           {...props}
         />
       )

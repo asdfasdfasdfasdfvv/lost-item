@@ -11,4 +11,8 @@ export type ButtonStyle = {
   title?: string
 }
 
+export type DateInputStyle = {
+  wrapper?: string
+}
+
 export type IconStyle = Pick<ButtonStyle, 'icon'>
