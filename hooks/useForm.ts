@@ -1,61 +1,7 @@
-/**
- * useForm - A custom React hook for handling forms with validation.
- *
- * Purpose:
- * This hook simplifies form handling in React applications by managing form state,
- * validations, and submissions. It provides an easy way to create controlled form elements
- * with validation logic and to gather form data for submission.
- *
- * Usage:
- * const { form, formStateRefs, isFormValid, handleOnChange, handleOnSubmit, getFormFields } = useForm(formSchema);
- *
- * Parameters:
- * - formSchema: FormSchema<T> - An object defining the structure of the form, including initial values, validators, and other field properties.
- * - options (optional): FormSchema<T> - Additional options to customize the form's behavior and initial state.
- *
- * Returns:
- * - form: FormState<T> - The current state of the form, including values and errors for each field.
- * - formStateRefs: MutableRefObject<Partial<{ [K in T]: FormValidateFields }>> - References to the form state, allowing for external manipulation.
- * - isFormValid: boolean - A flag indicating whether the form is currently valid (no errors) or not.
- * - handleOnChange: (event: React.ChangeEvent<HTMLInputElement>) => void - A function to be called whenever an input value changes, updating the form state and validating the input.
- * - handleOnSubmit: (submit: (e: FormEvent<HTMLFormElement>, formData: SubmitFormData<T>) => Promise<void>) => (event: FormEvent<HTMLFormElement>) => Promise<void> - A function to handle form submission, which should be passed the actual submission logic.
- * - getFormFields: () => FormFields<T> - A function to retrieve the form fields with their current state and configuration.
- *
- * Example:
- * ```jsx
- * const formSchema = {
- *   username: {
- *     value: '',
- *     validate: (value) => (!value ? 'Username is required' : null),
- *     // ... other field properties
- *   },
- *   // ... other fields
- * };
- *
- * const MyComponent = () => {
- *   const { form, handleOnChange, handleOnSubmit } = useForm(formSchema);
- *
- *   const submitForm = async (e, formData) => {
- *     // handle form submission
- *   };
- *
- *   return (
- *     <form onSubmit={handleOnSubmit(submitForm)}>
- *       <input name="username" value={form.username.value} onChange={handleOnChange} />
- *       {form.username.error && <span>{form.username.error}</span>}
- *       // ... other form inputs
- *       <button type="submit">Submit</button>
- *     </form>
- *   );
- * };
- * ```
- *
- * Note: Replace T with the appropriate type or interface representing your form's field names.
- */
-
-import type { ChangeEvent, FormEvent, MutableRefObject } from 'react'
+import type { FormEvent, MutableRefObject } from 'react'
 import { createRef, useRef, useState } from 'react'
 import type {
+  FormChangeEvent,
   FormFieldRender,
   FormKeys,
   FormRefs,
@@ -69,7 +15,7 @@ type UseInputSchemaReturn<T extends keyof FormKeys> = {
   form: FormState<T>
   formStateRefs: MutableRefObject<Partial<{ [K in T]: FormValidateFields }>>
   isFormValid: boolean
-  handleOnChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  handleOnChange: (formChangeEvent: FormChangeEvent) => void
   handleOnSubmit: (
     submit: (
       e: FormEvent<HTMLFormElement>,
@@ -87,7 +33,7 @@ const generateFormFields = <T extends keyof FormKeys>(
   formSchema: FormSchema<T>,
   event: {
     [x: string]: any
-    handleOnChange?: (event: ChangeEvent<HTMLInputElement>) => void
+    handleOnChange?: ({ event, inputData }: FormChangeEvent) => void
   }
 ): { renderFields: FormFieldRender<T> } => {
   const renderFields = {} as FormFieldRender<T>
@@ -96,7 +42,6 @@ const generateFormFields = <T extends keyof FormKeys>(
   keys.forEach((key) => {
     // eslint-disable-next-line unused-imports/no-unused-vars
     const { controlled, component, validate, ...props } = formSchema[key]
-
     renderFields[key] =
       formSchema[key].component?.({ ...props, ...event }) || null
   })
@@ -189,8 +134,14 @@ const useForm = <T extends keyof FormKeys>(
   const formStateRefs = useRef<FormState<T>>(initForm)
   const isFormValid = useRef<boolean>(false)
 
-  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target
+  const handleOnChange = ({ event, inputData }: FormChangeEvent) => {
+    const { name, value } = event
+      ? event.target
+      : inputData ?? { name: '', value: '' }
+
+    if (!name) {
+      return
+    }
     const errorMessage = formSchema[name as T]?.validate(value, form)
 
     const changedForm = {
@@ -198,9 +149,11 @@ const useForm = <T extends keyof FormKeys>(
       [name]: { value, error: errorMessage }
     } as FormState<T>
     setForm(changedForm)
+
     formStateRefs.current = changedForm
     isFormValid.current = checkFormValid(changedForm)
   }
+
   const getFormFields = () => {
     const event = {
       handleOnChange

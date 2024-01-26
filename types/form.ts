@@ -1,4 +1,4 @@
-import type { FormEvent, RefObject } from 'react'
+import type { ChangeEvent, FormEvent, RefObject } from 'react'
 
 export const INPUT_TYPE = {
   text: 'text',
@@ -67,4 +67,14 @@ export type FormSubmit<T extends keyof FormKeys> = {
 
 export type SubmitFormData<T extends keyof FormKeys> = {
   [K in T]: any
+}
+
+export type InputData<T extends keyof FormKeys> = {
+  name: T
+  value: string | Date | number
+}
+
+export type FormChangeEvent = {
+  event?: ChangeEvent<HTMLInputElement>
+  inputData?: { name: string; value: string }
 }
