@@ -2,7 +2,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { modalContentState } from 'atom/modalAtom'
 import useInfiniteScroll from 'hooks/useInfiniteScroll'
-import { Fragment, Suspense, useRef } from 'react'
+import { Fragment, useRef } from 'react'
 import { useSetRecoilState } from 'recoil'
 import type { LostItemRequestType, LostItemResponse } from 'types/api/lost'
 import { buildUrlWithParams } from 'utils/api'
@@ -81,32 +81,30 @@ export default function LostItems({ searchParams }: Props) {
   return (
     <ScrollLayout>
       <ul className="relative box-border w-full">
-        <Suspense fallback={isLoading}>
-          {data.pages.map((group: LostItemResponse, i) => (
-            <Fragment key={i}>
-              {group.content.map(
-                ({
-                  articleId,
-                  foundAt,
-                  locationName,
-                  productName,
-                  subject,
-                  depositPlace
-                }) => (
-                  <LostItem
-                    key={articleId}
-                    lostDate={foundAt}
-                    lostPlace={locationName}
-                    title={productName}
-                    subject={subject}
-                    depositPlace={depositPlace}
-                    handleClickLostItem={() => handleClickLostItem(articleId)}
-                  />
-                )
-              )}
-            </Fragment>
-          ))}
-        </Suspense>
+        {data.pages.map((group: LostItemResponse, i) => (
+          <Fragment key={i}>
+            {group.content.map(
+              ({
+                articleId,
+                foundAt,
+                locationName,
+                productName,
+                subject,
+                depositPlace
+              }) => (
+                <LostItem
+                  key={articleId}
+                  lostDate={foundAt}
+                  lostPlace={locationName}
+                  title={productName}
+                  subject={subject}
+                  depositPlace={depositPlace}
+                  handleClickLostItem={() => handleClickLostItem(articleId)}
+                />
+              )
+            )}
+          </Fragment>
+        ))}
       </ul>
       {isFetchingNextPage && !data ? (
         <LostItemsSkeleton />
