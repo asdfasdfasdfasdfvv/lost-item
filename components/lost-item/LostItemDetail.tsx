@@ -17,21 +17,22 @@ const Detail: React.FC<DetailProps> = ({ label, value }) => (
 )
 
 export interface LostItemDetails {
-  lostProductName: string
+  id: string
   articleId: string
-  lostDate: string
-  lostHour: string
-  lostPlace: string
-  productClassificationName: string
-  lostStateName: string
-  unique: string
-  lostLocationName: string
-  lostSubject: string
+  custodyStatusName: string
+  depositPlace: string
+  filePathImage: string
+  foundHour: string // HH:mm:ss 형식
+  foundPlace: string
+  productName: string
+  serialNumber: string
+  foundDate: string // yyyy-MM-dd 형식
+  foundKeepOrganizationSectionName: string | null // 'null'이 가능한 필드
   organizationId: string
   organizationName: string
-  telephoneNumber: string
-  lostPlaceSectionName: string
-  lostFilePathImage: string
+  productClassification: string
+  telephone: string
+  unique: string
 }
 
 interface LostItemPageProps {
@@ -45,10 +46,12 @@ const LostItemDetail: React.FC<LostItemPageProps> = ({
   const { data, isLoading } = useQuery<LostItemDetails>({
     queryKey: ['lostItemDetail'],
     queryFn: async () => {
-      const res = await fetch(`/v1/lost/items/${lostItemId}`, { method: 'GET' })
-      const { body } = await res.json()
-
-      return { ...body } as LostItemDetails
+      const res = await fetch(`/v1/founds/${lostItemId}`, {
+        method: 'GET'
+      })
+      const { data } = await res.json()
+      console.log(data)
+      return { ...data } as LostItemDetails
     }
   })
   if (isLoading) {
@@ -58,29 +61,29 @@ const LostItemDetail: React.FC<LostItemPageProps> = ({
     return <div>No Result</div>
   }
   const {
-    lostProductName,
-    lostFilePathImage,
+    productName,
+    filePathImage,
     articleId,
-    lostDate,
-    lostPlace,
-    lostPlaceSectionName,
+    foundDate,
+    foundPlace,
+    productClassification,
     organizationName,
-    lostStateName,
-    telephoneNumber
+    custodyStatusName,
+    telephone
   } = data
 
   return (
     <div className="box-border w-375pxr bg-white p-5pxr">
       <h1 className="font-black">분실물 상세 정보</h1>
       <div className="w-full">
-        <Detail label="습득물명" value={lostProductName} />
+        <Detail label="습득물명" value={productName} />
         <Detail label="관리번호" value={articleId} />
-        <Detail label="습득일" value={lostDate} />
-        <Detail label="습득장소" value={lostPlace} />
-        <Detail label="물품분류" value={lostPlaceSectionName} />
+        <Detail label="습득일" value={foundDate} />
+        <Detail label="습득장소" value={foundPlace} />
+        <Detail label="물품분류" value={productClassification} />
         <Detail label="보관장소" value={organizationName} />
-        <Detail label="유실물상태" value={lostStateName} />
-        <Detail label="보관장소연락처" value={telephoneNumber} />
+        <Detail label="유실물상태" value={custodyStatusName} />
+        <Detail label="보관장소연락처" value={telephone} />
         <span>(운영시간: 평일 9시 ~ 18시, 점심시간: 12시 ~ 13시)</span>
 
         <div
@@ -90,7 +93,7 @@ const LostItemDetail: React.FC<LostItemPageProps> = ({
             position: 'relative'
           }}>
           <Image
-            src={lostFilePathImage}
+            src={filePathImage}
             alt="lost-item_detail"
             width={0}
             height={0}

@@ -85,6 +85,7 @@ export default function LostItems({ searchParams }: Props) {
           <Fragment key={i}>
             {group.content.map(
               ({
+                id,
                 articleId,
                 foundAt,
                 locationName,
@@ -99,7 +100,7 @@ export default function LostItems({ searchParams }: Props) {
                   title={productName}
                   subject={subject}
                   depositPlace={depositPlace}
-                  handleClickLostItem={() => handleClickLostItem(articleId)}
+                  handleClickLostItem={() => handleClickLostItem(id)}
                 />
               )
             )}
