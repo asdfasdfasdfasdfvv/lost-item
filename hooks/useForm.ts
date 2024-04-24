@@ -27,6 +27,7 @@ type UseInputSchemaReturn<T extends keyof FormKeys> = {
   getFormFields: () => {
     renderFields: FormFieldRender<T>
   }
+  setFormFields: (fieldName: T, value: any) => void
 }
 
 const generateFormFields = <T extends keyof FormKeys>(
@@ -34,6 +35,9 @@ const generateFormFields = <T extends keyof FormKeys>(
   event: {
     [x: string]: any
     handleOnChange?: ({ event, inputData }: FormChangeEvent) => void
+  },
+  controller: {
+    setFormFields?: (fieldName: T, value: any) => void
   }
 ): { renderFields: FormFieldRender<T> } => {
   const renderFields = {} as FormFieldRender<T>
@@ -42,10 +46,14 @@ const generateFormFields = <T extends keyof FormKeys>(
   keys.forEach((key) => {
     // eslint-disable-next-line unused-imports/no-unused-vars
     const { controlled, component, validate, ...props } = formSchema[key]
-    renderFields[key] =
-      formSchema[key].component?.({ ...props, ...event }) || null
+    if (component) {
+      renderFields[key] =
+        component({
+          args: { ...props, ...event },
+          controller
+        }) || null
+    }
   })
-
   return { renderFields }
 }
 const initializeFormRefs = <T extends keyof FormKeys>(
@@ -76,6 +84,7 @@ const generateInitFormState = <T extends keyof FormKeys>(
     }
   }, {} as FormSchema<T>)
 }
+
 const checkFormValid = <T extends keyof FormKeys>(
   nextForm: FormState<T>
 ): boolean => {
@@ -158,8 +167,29 @@ const useForm = <T extends keyof FormKeys>(
     const event = {
       handleOnChange
     }
-    return generateFormFields(preprocessedFormState, event)
+    const controller = {
+      setFormFields
+    }
+    return generateFormFields(preprocessedFormState, event, controller)
   }
+  const setFormFields = (fieldName: keyof FormState<T>, value: any) => {
+    const errorMessage = formSchema[fieldName as T]?.validate(value, form)
+    const updatedForm = {
+      ...form,
+      [fieldName]: { value, error: errorMessage }
+    } as FormState<T>
+
+    setForm(updatedForm)
+
+    if (!fieldName) {
+      return
+    }
+
+    formStateRefs.current = updatedForm
+
+    isFormValid.current = checkFormValid(updatedForm)
+  }
+
   const handleOnSubmit =
     (onSubmit: {
       (
@@ -186,7 +216,8 @@ const useForm = <T extends keyof FormKeys>(
     handleOnChange,
     isFormValid: isFormValid.current,
     handleOnSubmit,
-    getFormFields
+    getFormFields,
+    setFormFields
   }
 }
 

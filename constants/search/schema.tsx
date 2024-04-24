@@ -1,9 +1,9 @@
 import Input from 'components/common/Input'
-import type { ChangeEvent } from 'react'
-import { SearchFormDateStyles } from 'styles/lost/search'
+import { type ChangeEvent, useEffect } from 'react'
 import type { FormSchema } from 'types/form'
 
 import { DatePicker } from '@/components/common/DatePicker'
+import SearchOptionLocation from '@/components/search/SearchOptionLocation'
 
 export type FormElements = 'subject' | 'startDate' | 'endDate' | 'lostLocation'
 
@@ -17,7 +17,7 @@ export const SearchSchema: FormSchema<FormElements> = {
     name: 'subject',
     label: '검색',
     placeholder: '검색어 입력',
-    component: (args) => {
+    component: ({ args }) => {
       const { handleOnChange, key, ref, ...props } = args
       const onChange = (e: ChangeEvent<HTMLInputElement>) => {
         handleOnChange({ event: e })
@@ -37,18 +37,21 @@ export const SearchSchema: FormSchema<FormElements> = {
     id: 'lostLocation',
     label: '분실 장소',
     placeholder: '분실 장소',
-    component: (args) => {
-      const { handleOnChange, key, ref, ...props } = args
-      const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-        handleOnChange({ event: e })
+    component: ({ args, controller }) => {
+      const { handleOnChange, key, ref, name, placeholder } = args
+      const { setFormFields } = controller
+      const onChange = (e: string) => {
+        handleOnChange({ inputData: { name, value: e } })
       }
+      useEffect(() => {
+        setFormFields?.(name, 'sss')
+      }, [])
       return (
-        <Input
-          style={SearchFormDateStyles}
-          key={key}
+        <SearchOptionLocation
           inputRef={ref}
-          onChange={onChange}
-          {...props}
+          onValueChange={onChange}
+          placeholder={placeholder}
+          key={key}
         />
       )
     },
@@ -56,6 +59,7 @@ export const SearchSchema: FormSchema<FormElements> = {
       return null
     }
   },
+
   startDate: {
     key: 'searchFrom_startDate',
     value: '',
@@ -64,7 +68,7 @@ export const SearchSchema: FormSchema<FormElements> = {
     controlled: true,
     name: 'startDate',
     label: '',
-    component: (args) => {
+    component: ({ args, controller }) => {
       const { handleOnChange, key, name, ...props } = args
       return (
         <DatePicker
@@ -88,7 +92,7 @@ export const SearchSchema: FormSchema<FormElements> = {
     id: 'endDate',
     name: 'endDate',
     label: '',
-    component: (args) => {
+    component: ({ args }) => {
       const { handleOnChange, key, name, ...props } = args
       return (
         <DatePicker

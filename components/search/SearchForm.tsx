@@ -39,6 +39,7 @@ export default function SearchForm({ updateSearchParams }: Props) {
     const params: LostItemRequestType = {
       ...formData
     }
+    console.log(params)
     updateSearchParams(params)
   }
   return (
