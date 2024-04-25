@@ -56,7 +56,7 @@ const SearchOptionLocation = ({
   }
   console.log(value, data)
   return (
-    <div className="relative my-2 flex w-full px-3pxr">
+    <div className="relative my-2 flex w-full pl-3pxr">
       <Select onValueChange={onChange} defaultValue={value} value={value}>
         <SelectTrigger>
           <SelectValue ref={ref} placeholder={placeholder} />
