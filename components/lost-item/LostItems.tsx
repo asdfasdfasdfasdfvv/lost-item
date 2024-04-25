@@ -1,8 +1,8 @@
 'use client'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { modalContentState } from 'atom/modalAtom'
-import useInfiniteScroll from 'hooks/useInfiniteScroll'
-import { Fragment, useRef } from 'react'
+import { Fragment, useEffect } from 'react'
+import { useInView } from 'react-intersection-observer'
 import { useSetRecoilState } from 'recoil'
 import type { LostItemRequestType, LostItemResponse } from 'types/api/lost'
 import { buildUrlWithParams } from 'utils/api'
@@ -41,29 +41,32 @@ interface Props {
 }
 export default function LostItems({ searchParams }: Props) {
   const setModal = useSetRecoilState(modalContentState)
-  const loader = useRef<HTMLDivElement | null>(null)
   const { data, isLoading, fetchNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ['lostItemList', searchParams],
       initialPageParam: 0,
       queryFn: getLostItemList,
       getNextPageParam: (lastPage: LostItemResponse) => {
-        if (lastPage?.last) {
+        if (lastPage?.last || lastPage.content.length === 0) {
           return null
         }
-        return lastPage.number + 1
-      }
-    })
 
-  useInfiniteScroll({
-    target: loader,
-    rootMargin: '0px',
-    callback: () => {
-      if (!isFetchingNextPage) {
-        fetchNextPage()
-      }
-    }
+        return lastPage.number + 1
+      },
+      retry: 0,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false
+    })
+  const { ref, inView } = useInView({
+    threshold: 0
   })
+  useEffect(() => {
+    console.log(inView)
+    if (inView) {
+      fetchNextPage()
+    }
+  }, [inView])
 
   if (isLoading) {
     return <LostItemsSkeleton />
@@ -106,11 +109,7 @@ export default function LostItems({ searchParams }: Props) {
           </Fragment>
         ))}
       </ul>
-      {isFetchingNextPage && !data ? (
-        <LostItemsSkeleton />
-      ) : (
-        <div ref={loader} className="relative min-h-10pxr" />
-      )}
+      {isFetchingNextPage && !data ? <LostItemsSkeleton /> : <div ref={ref} />}
     </ScrollLayout>
   )
 }

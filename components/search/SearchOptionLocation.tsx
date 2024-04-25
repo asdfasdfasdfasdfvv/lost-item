@@ -54,7 +54,7 @@ const SearchOptionLocation = ({
   const onChange = (selectValue: string) => {
     handleOnChange({ inputData: { name, value: selectValue } })
   }
-  console.log(value, data)
+
   return (
     <div className="relative my-2 flex w-full pl-3pxr">
       <Select onValueChange={onChange} defaultValue={value} value={value}>
