@@ -27,10 +27,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="flex justify-center">
       <body
         className={cn(
-          'min-h-screen bg-background font-sans antialiased w-full max-w-375pxr flex flex-col justify-center self-center mx-auto',
+          'min-h-screen bg-background font-sans antialiased w-full m-w-320pxr max-w-375pxr self-center h-dvh',
           fontSans.variable
         )}>
         <ThemeProvider
