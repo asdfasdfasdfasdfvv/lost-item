@@ -50,7 +50,6 @@ export default function LostItems({ searchParams }: Props) {
         if (lastPage?.last || lastPage.content.length === 0) {
           return null
         }
-
         return lastPage.number + 1
       },
       retry: 0,
@@ -62,7 +61,6 @@ export default function LostItems({ searchParams }: Props) {
     threshold: 0
   })
   useEffect(() => {
-    console.log(inView)
     if (inView) {
       fetchNextPage()
     }
@@ -88,7 +86,6 @@ export default function LostItems({ searchParams }: Props) {
             {group.content.map(
               ({
                 id,
-                articleId,
                 foundAt,
                 locationName,
                 productName,
@@ -96,7 +93,7 @@ export default function LostItems({ searchParams }: Props) {
                 depositPlace
               }) => (
                 <LostItem
-                  key={articleId}
+                  key={id}
                   lostDate={foundAt}
                   lostPlace={locationName}
                   title={productName}
