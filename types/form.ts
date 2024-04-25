@@ -17,14 +17,16 @@ export type FormValidateFields = {
 export type FormState<T extends keyof FormKeys> = Partial<{
   [K in T]: FormValidateFields
 }>
-type ComponentProps<T> = {
-  args: any // args는 여러 추가적인 인자를 포함할 수 있습니다.
-  controller: {
-    setFormFields?: (fieldName: T, value: any) => void // 폼 필드 값을 설정하는 함수
-  }
+export type FormContrlloer<T extends keyof FormKeys> = {
+  setFieldValue: (fieldName: T, value: any) => void
+}
+export type FormProps<T extends keyof FormKeys> = {
+  args: any
+  controller: FormContrlloer<T>
 }
 export type FormFieldValue<T extends keyof FormKeys> = {
-  value: string | number
+  value?: string | number
+  defaultValue?: string | number
   error?: FormError
   controlled?: boolean
   ref?: RefObject<HTMLInputElement>
@@ -40,7 +42,7 @@ export type FormFieldValue<T extends keyof FormKeys> = {
     formState?: FormState<T> | undefined
   ) => FormError
   onChange?: () => void
-  component?: (props: ComponentProps<T>) => JSX.Element
+  component?: (props: FormProps<T>) => JSX.Element
 }
 export type FormFieldRender<T extends keyof FormKeys> = {
   [K in T]: JSX.Element | null

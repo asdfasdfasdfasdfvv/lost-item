@@ -2,6 +2,7 @@ import type { FormEvent, MutableRefObject } from 'react'
 import { createRef, useRef, useState } from 'react'
 import type {
   FormChangeEvent,
+  FormContrlloer,
   FormFieldRender,
   FormKeys,
   FormRefs,
@@ -27,7 +28,7 @@ type UseInputSchemaReturn<T extends keyof FormKeys> = {
   getFormFields: () => {
     renderFields: FormFieldRender<T>
   }
-  setFormFields: (fieldName: T, value: any) => void
+  setFieldValue: (fieldName: T, value: any) => void
 }
 
 const generateFormFields = <T extends keyof FormKeys>(
@@ -36,24 +37,24 @@ const generateFormFields = <T extends keyof FormKeys>(
     [x: string]: any
     handleOnChange?: ({ event, inputData }: FormChangeEvent) => void
   },
-  controller: {
-    setFormFields?: (fieldName: T, value: any) => void
-  }
+  controller: FormContrlloer<T>,
+  form: FormState<T>
 ): { renderFields: FormFieldRender<T> } => {
   const renderFields = {} as FormFieldRender<T>
   const keys = Object.keys(formSchema) as T[]
-
   keys.forEach((key) => {
     // eslint-disable-next-line unused-imports/no-unused-vars
     const { controlled, component, validate, ...props } = formSchema[key]
+    const value = form[key]?.value
     if (component) {
       renderFields[key] =
         component({
-          args: { ...props, ...event },
+          args: { ...props, ...event, value },
           controller
         }) || null
     }
   })
+
   return { renderFields }
 }
 const initializeFormRefs = <T extends keyof FormKeys>(
@@ -129,12 +130,13 @@ const useForm = <T extends keyof FormKeys>(
   const preprocessedFormState = generateInitFormState(initFormState, formRefs)
   const keys = Object.keys(preprocessedFormState) as T[]
   const initForm = keys.reduce<FormState<T>>((acc, input: T) => {
-    const { value, validate } = formSchema[input]
+    const { value, validate, defaultValue } = formSchema[input]
+    const initFieldValue = defaultValue !== undefined ? defaultValue : value
     return {
       ...acc,
       [input]: {
         value,
-        error: validate(value)
+        error: validate(initFieldValue || '')
       }
     }
   }, {})
@@ -147,7 +149,6 @@ const useForm = <T extends keyof FormKeys>(
     const { name, value } = event
       ? event.target
       : inputData ?? { name: '', value: '' }
-
     if (!name) {
       return
     }
@@ -168,17 +169,16 @@ const useForm = <T extends keyof FormKeys>(
       handleOnChange
     }
     const controller = {
-      setFormFields
+      setFieldValue
     }
-    return generateFormFields(preprocessedFormState, event, controller)
+    return generateFormFields(preprocessedFormState, event, controller, form)
   }
-  const setFormFields = (fieldName: keyof FormState<T>, value: any) => {
+  const setFieldValue = (fieldName: keyof FormState<T>, value: any) => {
     const errorMessage = formSchema[fieldName as T]?.validate(value, form)
     const updatedForm = {
       ...form,
       [fieldName]: { value, error: errorMessage }
     } as FormState<T>
-
     setForm(updatedForm)
 
     if (!fieldName) {
@@ -186,7 +186,6 @@ const useForm = <T extends keyof FormKeys>(
     }
 
     formStateRefs.current = updatedForm
-
     isFormValid.current = checkFormValid(updatedForm)
   }
 
@@ -217,7 +216,7 @@ const useForm = <T extends keyof FormKeys>(
     isFormValid: isFormValid.current,
     handleOnSubmit,
     getFormFields,
-    setFormFields
+    setFieldValue
   }
 }
 
