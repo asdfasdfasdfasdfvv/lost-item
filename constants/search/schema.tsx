@@ -1,11 +1,11 @@
 import Input from 'components/common/Input'
-import { type ChangeEvent, useEffect } from 'react'
+import { type ChangeEvent } from 'react'
 import type { FormSchema } from 'types/form'
 
 import { DatePicker } from '@/components/common/DatePicker'
 import SearchOptionLocation from '@/components/search/SearchOptionLocation'
 
-export type FormElements = 'subject' | 'startDate' | 'endDate' | 'lostLocation'
+export type FormElements = 'subject' | 'startDate' | 'endDate' | 'location'
 
 export const SearchSchema: FormSchema<FormElements> = {
   subject: {
@@ -15,7 +15,6 @@ export const SearchSchema: FormSchema<FormElements> = {
     controlled: true,
     id: 'subject',
     name: 'subject',
-    label: '검색',
     placeholder: '검색어 입력',
     component: ({ args }) => {
       const { handleOnChange, key, ref, ...props } = args
@@ -28,33 +27,15 @@ export const SearchSchema: FormSchema<FormElements> = {
       return null
     }
   },
-  lostLocation: {
+  location: {
     key: 'searchForm_lostLocation',
-    value: '',
     type: 'text',
     controlled: true,
-    name: 'lostLocation',
-    id: 'lostLocation',
+    name: 'location',
+    id: 'location',
     label: '분실 장소',
     placeholder: '분실 장소',
-    component: ({ args, controller }) => {
-      const { handleOnChange, key, ref, name, placeholder } = args
-      const { setFormFields } = controller
-      const onChange = (e: string) => {
-        handleOnChange({ inputData: { name, value: e } })
-      }
-      useEffect(() => {
-        setFormFields?.(name, 'sss')
-      }, [])
-      return (
-        <SearchOptionLocation
-          inputRef={ref}
-          onValueChange={onChange}
-          placeholder={placeholder}
-          key={key}
-        />
-      )
-    },
+    component: SearchOptionLocation,
     validate: () => {
       return null
     }
@@ -68,7 +49,7 @@ export const SearchSchema: FormSchema<FormElements> = {
     controlled: true,
     name: 'startDate',
     label: '',
-    component: ({ args, controller }) => {
+    component: ({ args }) => {
       const { handleOnChange, key, name, ...props } = args
       return (
         <DatePicker

@@ -1,6 +1,9 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
+import type { FormElements } from 'constants/search/schema'
+import { useEffect } from 'react'
+import type { FormProps } from 'types/form'
 
 import {
   Select,
@@ -15,11 +18,12 @@ import type { OptionType } from '../lost-item/types/options'
 export interface SelectProps
   extends React.SelectHTMLAttributes<HTMLSelectElement> {}
 
-type Props = SelectProps & {
-  placeholder: string
-  inputRef?: React.RefObject<HTMLButtonElement>
-  onValueChange: (value: string) => void
-}
+// type Props = SelectProps & {
+//   placeholder: string
+//   inputRef?: React.RefObject<HTMLButtonElement>
+//   onValueChange: (value: string) => void
+//   formContller: FormContrlloer<T>
+// }
 export const Category = {
   WORKOUT: '운동',
   LEARNING: '학습',
@@ -30,31 +34,44 @@ export const Category = {
   ALL: '전체'
 } as const
 
-export default function SearchOptionLocation({
-  onValueChange,
-  inputRef,
-  placeholder
-}: Props) {
-  const { data, isLoading } = useQuery<OptionType[]>({
+const SearchOptionLocation = ({
+  args,
+  controller
+}: FormProps<FormElements>) => {
+  const { handleOnChange, ref, name, placeholder, value } = args
+  const { data, status } = useQuery<OptionType[]>({
     queryKey: ['SearchOptionLocationList'],
     queryFn: async () => {
       const data = await getLostLocationList()
       return data
     }
   })
+  useEffect(() => {
+    if (status === 'success' && data && data?.length > 0) {
+      controller?.setFieldValue(name, data[0].value)
+    }
+  }, [data])
+  const onChange = (selectValue: string) => {
+    handleOnChange({ inputData: { name, value: selectValue } })
+  }
+  console.log(value, data)
   return (
-    <Select onValueChange={onValueChange}>
-      <SelectTrigger>
-        <SelectValue ref={inputRef} placeholder={placeholder} />
-      </SelectTrigger>
-
-      <SelectContent>
-        {Object.values(Category).map((category) => (
-          <SelectItem key={category} value={category}>
-            {category}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <div className="relative my-2 flex w-full px-3pxr">
+      <Select onValueChange={onChange} defaultValue={value} value={value}>
+        <SelectTrigger>
+          <SelectValue ref={ref} placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent position="popper">
+          {data &&
+            Object.values(data).map(({ name, value }) => (
+              <SelectItem key={value} value={value}>
+                {name}
+              </SelectItem>
+            ))}
+        </SelectContent>
+      </Select>
+    </div>
   )
 }
+
+export default SearchOptionLocation

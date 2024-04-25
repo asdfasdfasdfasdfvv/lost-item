@@ -42,7 +42,6 @@ interface Props {
 export default function LostItems({ searchParams }: Props) {
   const setModal = useSetRecoilState(modalContentState)
   const loader = useRef<HTMLDivElement | null>(null)
-
   const { data, isLoading, fetchNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ['lostItemList', searchParams],
