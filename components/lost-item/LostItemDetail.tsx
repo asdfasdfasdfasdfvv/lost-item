@@ -5,14 +5,17 @@ import Button from 'components/common/Button'
 import Image from 'next/image'
 import { useSetRecoilState } from 'recoil'
 
+import LoadingComponent from '../common/Loading'
+
 interface DetailProps {
   label: string
-  value: string
+  value?: string
+  children?: React.ReactNode
 }
 
-const Detail: React.FC<DetailProps> = ({ label, value }) => (
+const Detail: React.FC<DetailProps> = ({ label, value, children }) => (
   <dl className="flex items-center justify-start">
-    <dt className="mr-5pxr font-bold">{label}:</dt> <dd>{value}</dd>
+    <dt className="mr-5pxr font-bold">{label}:</dt> <dd>{children || value}</dd>
   </dl>
 )
 
@@ -43,7 +46,8 @@ const LostItemDetail: React.FC<LostItemPageProps> = ({
   lostItemId
 }: LostItemPageProps) => {
   const setModal = useSetRecoilState(modalContentState)
-  const { data, isLoading } = useQuery<LostItemDetails>({
+
+  const { data, isLoading, isRefetching } = useQuery<LostItemDetails>({
     queryKey: ['lostItemDetail'],
     queryFn: async () => {
       const res = await fetch(`/v1/founds/${lostItemId}`, {
@@ -53,12 +57,26 @@ const LostItemDetail: React.FC<LostItemPageProps> = ({
       return { ...data } as LostItemDetails
     }
   })
-  if (isLoading) {
-    return <div>Is Loading...</div>
+
+  if (isLoading || isRefetching) {
+    return <LoadingComponent />
   }
-  if (!data) {
-    return <div>No Result</div>
+  if (!data || Object.keys(data).length === 0) {
+    return (
+      <div className="box-border w-375pxr rounded-lg bg-white p-10pxr">
+        <h1 className="font-black">아직 상세 정보가 등록되지 않았습니다.</h1>
+
+        <Button
+          title="확인"
+          style={{ wrapper: 'w-full mt-4' }}
+          onClick={() => {
+            setModal(null)
+          }}
+        />
+      </div>
+    )
   }
+  console.log(data)
   const {
     productName,
     filePathImage,
@@ -72,9 +90,9 @@ const LostItemDetail: React.FC<LostItemPageProps> = ({
   } = data
 
   return (
-    <div className="box-border w-375pxr bg-white p-5pxr">
+    <div className="box-border w-375pxr rounded-lg bg-white p-10pxr">
       <h1 className="font-black">분실물 상세 정보</h1>
-      <div className="w-full">
+      <div className="grid w-full gap-2">
         <Detail label="습득물명" value={productName} />
         <Detail label="관리번호" value={articleId} />
         <Detail label="습득일" value={foundDate} />
@@ -82,27 +100,26 @@ const LostItemDetail: React.FC<LostItemPageProps> = ({
         <Detail label="물품분류" value={productClassification} />
         <Detail label="보관장소" value={organizationName} />
         <Detail label="유실물상태" value={custodyStatusName} />
-        <Detail label="보관장소연락처" value={telephone} />
+        <Detail label="보관장소연락처">
+          <a href={`tel:${telephone}`}>{telephone}</a>
+        </Detail>
         <span>(운영시간: 평일 9시 ~ 18시, 점심시간: 12시 ~ 13시)</span>
-
-        <div
-          style={{
-            width: '100%',
-            height: '200px',
-            position: 'relative'
-          }}>
-          <Image
-            src={filePathImage}
-            alt="lost-item_detail"
-            width={0}
-            height={0}
-            sizes="100vw"
-            style={{ width: '100%', height: '100%' }} // optional
-          />
-        </div>
+        <Image
+          src={
+            filePathImage ||
+            'https://www.lost112.go.kr/lostnfs/images/sub/img04_no_img.gif'
+          }
+          priority
+          alt="goalImage"
+          width="0"
+          height="0"
+          sizes="(max-width: 400x) 100vw, 33vw"
+          className="h-auto w-full"
+        />
       </div>
       <Button
         title="확인"
+        style={{ wrapper: 'w-full mt-4' }}
         onClick={() => {
           setModal(null)
         }}

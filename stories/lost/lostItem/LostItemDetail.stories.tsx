@@ -10,4 +10,4 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = { args: { lostItemId: 'test' } }
+export const Default: Story = { args: { lostItemId: '' } }
