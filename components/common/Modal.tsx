@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 /* eslint-disable tailwindcss/migration-from-tailwind-2 */
 'use client'
 import { modalContentState } from 'atom/modalAtom'
@@ -19,13 +20,13 @@ function Modal() {
 
   return element
     ? createPortal(
-        <div
-          className={
-            'fixed inset-[0] flex h-screen items-center justify-center bg-black bg-opacity-70'
-          }
-          onClick={(e) => closeModal(e)}
-          ref={modalRef}>
-          {modalContent}
+        <div className="absolute inset-0 box-border flex w-full items-center justify-center overflow-y-auto bg-black bg-opacity-70 scrollbar-hide">
+          <div
+            className="m-w-full m-auto box-border max-w-310pxr "
+            onClick={(e) => closeModal(e)}
+            ref={modalRef}>
+            {modalContent}
+          </div>
         </div>,
         element
       )

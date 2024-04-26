@@ -63,7 +63,7 @@ const LostItemDetail: React.FC<LostItemPageProps> = ({
   }
   if (!data || Object.keys(data).length === 0) {
     return (
-      <div className="box-border w-375pxr rounded-lg bg-white p-10pxr">
+      <div className="box-border rounded-lg bg-white p-10pxr">
         <h1 className="font-black">아직 상세 정보가 등록되지 않았습니다.</h1>
 
         <Button
@@ -90,9 +90,8 @@ const LostItemDetail: React.FC<LostItemPageProps> = ({
   } = data
 
   return (
-    <div className="box-border w-375pxr rounded-lg bg-white p-10pxr">
-      <h1 className="font-black">분실물 상세 정보</h1>
-      <div className="grid w-full gap-2">
+    <div className="box-border rounded-lg bg-white p-10pxr">
+      <div className="grid w-full gap-1">
         <Detail label="습득물명" value={productName} />
         <Detail label="관리번호" value={articleId} />
         <Detail label="습득일" value={foundDate} />
@@ -104,6 +103,7 @@ const LostItemDetail: React.FC<LostItemPageProps> = ({
           <a href={`tel:${telephone}`}>{telephone}</a>
         </Detail>
         <span>(운영시간: 평일 9시 ~ 18시, 점심시간: 12시 ~ 13시)</span>
+
         <Image
           src={
             filePathImage ||
